@@ -17,31 +17,30 @@
 #include<stdio.h>
 int main(void)
 {
-	int num, i, j, space = 0;
+	int input, row, coloumn, space = 0;
 
-	scanf("%d", &num);   // user input for the size of the pattern
-	// the pattern will have 2*num-1 rows
-	for (i = 0; i < num * 2 - 1; i++) {
-		// first half of the pattern
-		if (i < num) {
-			for (j = 0; j < space; j++)
+	scanf("%d", &input);
+
+	for (row = 0; row < input * 2 - 1; row++) {
+
+		if (row < input) {
+			for (coloumn = 0; coloumn < space; coloumn++)
 				printf(" ");
 
-			for (j = 0; j < num; j++)
+			for (coloumn = 0; coloumn < input; coloumn++)
 				printf("*");
 
 			space++;
 			printf("\n");
 
-			if (i == num - 1)
+			if (row == input - 1)
 				space -= 2;
-		}
-		// second half of the pattern
-		else {
-			for (j = 0; j < space; j++)
+
+		} else {
+			for (coloumn = 0; coloumn < space; coloumn++)
 				printf(" ");
 
-			for (j = 0; j < num; j++)
+			for (coloumn = 0; coloumn < input; coloumn++)
 				printf("*");
 
 			space--;
