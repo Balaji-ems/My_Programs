@@ -14,10 +14,14 @@ int main(void)
 	int choice;
 	struct node *todelete;
 
+	printf("Delete a node in doubly linked list by sending ");
+	printf("pointer of the node as parameter to the function\n");
+
 	while (1) {
 		printf("Select an option given below\n");
 		printf("1.Insert\n2.Delete\n3.Display\n4.Exit\n");
 		scanf("%d", &choice);
+
 		switch (choice) {
 		case(1):
 			insertatEnd();
