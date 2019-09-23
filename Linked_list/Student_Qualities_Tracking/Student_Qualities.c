@@ -82,11 +82,13 @@ void insert(void)
 {
 	struct node *temp = (struct node *) malloc(sizeof(struct node));
 	struct node *temp1 =  head;
+	int num;
 
-	printf("\nEnter the roll number of the student : ");
-	scanf("%d", &temp->rollno);
-	printf("\nEnter the name of the student        : ");
+	printf("\nEnter the Name of the student        : ");
 	scanf("%s", temp->name);
+
+	printf("\nEnter the Roll Number of the student : ");
+	scanf("%d", &temp->rollno);
 
 	temp->quality = 0;
 	temp->next = NULL;
@@ -97,6 +99,14 @@ void insert(void)
 		while (temp1->next != NULL)
 			temp1 = temp1->next;
 		temp1->next = temp;
+	}
+A:
+	if (head->next != NULL) {
+		num = searchRollnumber(temp->rollno);
+		if (num == 1)
+			goto A;
+		else
+			return;
 	}
 }
 
@@ -241,4 +251,22 @@ void delete(int key)
 	temp1->next = temp->next;
 	free(temp);
 	printf("Deleted Successfully\n");
+}
+
+/*
+ * Function to search the Roll number of the student
+ * in the database. If the roll number is present in the
+ * database returns 1 else returns 0.
+ */
+
+int searchRollnumber(int Rollnumber)
+{
+	struct node *temp = head;
+
+	while (temp->next != NULL) {
+		if (temp->rollno == Rollnumber)
+			return 1;
+		temp = temp->next;
+	}
+	return 0;
 }
