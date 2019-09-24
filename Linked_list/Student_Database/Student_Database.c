@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0
+// SPDX-License-Identifier: GPL-3.0
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,12 +7,12 @@
 
 /*
  * create a strucure which stores the roll no and name
- * of a student
+ * of a student (Singly Linked List)
  */
 
 struct node {
-	char name[20];
-	int rollno;
+	char   name[20];
+	int    rollno;
 	struct node *next;
 } *head = NULL;
 
@@ -37,6 +37,7 @@ int main(void)
 		case 1:
 			printf("Enter the posistion to insert the data : ");
 			scanf("%d", &ch);
+
 			if (ch > total_node) {
 				printf("\nPosistion is greater than list size\n");
 				printf("Total size of the list is %d", total_node - 1);
@@ -47,14 +48,15 @@ int main(void)
 				insertatEnd();
 			else
 				insertatMiddle(ch);
+			
 			total_node++;	
 			break;
 		case 2:
 			display();
 			break;
 		case 3:
-			printf("Enter the roll number of the student to ");
-			printf("delete the data : ");
+			printf("Enter the roll number of the student to "
+				"delete the data : ");
 			scanf("%d", &ch);
 			delete(ch);
 			break;
@@ -129,7 +131,7 @@ void insertatEnd(void)
 
 void insertatMiddle(int posistion)
 {
-	int count = 1;
+	int    count = 1;
 	struct node *temp = head;
 	struct node *temp1 = (struct node *)malloc(sizeof(struct node));
 	struct node *temp2 = NULL;
@@ -159,13 +161,14 @@ void insertatMiddle(int posistion)
 void display(void)
 {
 	struct node *temp1 = head;
-	int snumber = 1;
+	int    snumber = 1;
 
 	if (head == NULL) {
 		printf("List is empty!!");
 		return;
 	}
 	printf("S.NO Name                 : Roll Number\n");
+
 	while (temp1 != NULL) {
 		printf("%4d %-20s : %d\n", snumber++,
 			temp1->name, temp1->rollno);
@@ -179,7 +182,7 @@ void display(void)
 
 void searchbyRollno(void)
 {
-	int flag = 0, searchElement, pos = 0;
+	int    flag = 0, searchElement, pos = 0;
 	struct node *temp1 = head;
 
 	if (head == NULL) {
@@ -192,6 +195,7 @@ void searchbyRollno(void)
 
 	while (temp1 != NULL) {
 		pos += 1;
+
 		if (temp1->rollno == searchElement) {
 			flag = 1;
 			break;
@@ -212,8 +216,8 @@ void searchbyRollno(void)
 
 void searchbyName(void)
 {
-	int flag = 0, pos = 0;
-	char search[20];
+	int    flag = 0, pos = 0;
+	char   search[20];
 	struct node *temp1 = head;
 
 	if (head == NULL) {

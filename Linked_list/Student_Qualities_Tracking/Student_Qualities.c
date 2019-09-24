@@ -19,7 +19,7 @@ char *Quality[] = {"Studies", "Disipline", "Sport", "Attendance",
 		   "Ragging", "Communication", "Respect_others"};
 
 #define check_bit(value, posistion) ((value) & 1 << (posistion))
-#define set_bit(value, posistion)  (value = value | (1 << posistion))
+#define set_bit(value, posistion)   (value = value | (1 << posistion))
 #define clear_bit(value, posistion) (value = value & (~(1 << posistion)))
 
 /*
@@ -27,9 +27,9 @@ char *Quality[] = {"Studies", "Disipline", "Sport", "Attendance",
  */
 
 struct node {
-	char name[20];
-	int quality;
-	int rollno;
+	char   name[20];
+	int    quality;
+	int    rollno;
 	struct node *next;
 } *head = NULL;
 
@@ -82,12 +82,18 @@ void insert(void)
 {
 	struct node *temp = (struct node *) malloc(sizeof(struct node));
 	struct node *temp1 =  head;
-	int num;
+	int    num = -1, count = 0;
 
 	printf("\nEnter the Name of the student        : ");
 	scanf("%s", temp->name);
+A:
 	printf("\nEnter the Roll Number of the student : ");
 	scanf("%d", &temp->rollno);
+
+	num = searchRollnumber(temp->rollno);
+
+	if (num == 1)
+		goto A;
 
 	temp->quality = 0;
 	temp->next = NULL;
@@ -98,23 +104,6 @@ void insert(void)
 		while (temp1->next != NULL)
 			temp1 = temp1->next;
 		temp1->next = temp;
-	}
-A:
-	temp1 = head;
-	while (temp1->next != NULL) {
-		if (temp1->rollno == temp->rollno) {
-
-			num = temp->rollno;
-			printf("\nRoll number already Exists!"
-				" Please enter a valid roll number\n"
-				"\nEnter the Roll Number of the student : ");
-			scanf("%d", &temp->rollno);
-			if (temp->rollno == num)
-				goto A;
-			else
-				return;
-		}
-		temp1 = temp1->next;
 	}
 }
 
@@ -272,8 +261,11 @@ int searchRollnumber(int Rollnumber)
 	struct node *temp = head;
 
 	while (temp != NULL) {
-		if (temp->rollno == Rollnumber)
+		if (temp->rollno == Rollnumber) {
+			printf("\nRoll number already exists ! Please enter a "
+				"valid Roll number\n");
 			return 1;
+		}
 		temp = temp->next;
 	}
 	return 0;

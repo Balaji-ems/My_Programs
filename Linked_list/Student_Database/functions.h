@@ -1,3 +1,6 @@
+#ifndef _FUNCTIONS_H
+#define _FUNCTIONS_H
+
 void insertatEnd(void);
 void display(void);
 void delete(int);
@@ -6,3 +9,5 @@ void searchbyRollno(void);
 void deleteatEnd(void);
 void insertatMiddle(int);
 void insert(void);
+
+#endif
