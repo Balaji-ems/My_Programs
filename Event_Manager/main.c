@@ -5,9 +5,6 @@
 #include "events.h"
 #include "global.h"
 
-char *events[] = {"Event one", "Event two", "Event three", "Event four",
-		  "Event five", "Event six", "Event seven"};
-
 int main(void)
 {
 	int search_event, i;
