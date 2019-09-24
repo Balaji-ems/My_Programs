@@ -86,7 +86,6 @@ void insert(void)
 
 	printf("\nEnter the Name of the student        : ");
 	scanf("%s", temp->name);
-
 	printf("\nEnter the Roll Number of the student : ");
 	scanf("%d", &temp->rollno);
 
@@ -101,12 +100,21 @@ void insert(void)
 		temp1->next = temp;
 	}
 A:
-	if (head->next != NULL) {
-		num = searchRollnumber(temp->rollno);
-		if (num == 1)
-			goto A;
-		else
-			return;
+	temp1 = head;
+	while (temp1->next != NULL) {
+		if (temp1->rollno == temp->rollno) {
+
+			num = temp->rollno;
+			printf("\nRoll number already Exists!"
+				" Please enter a valid roll number\n"
+				"\nEnter the Roll Number of the student : ");
+			scanf("%d", &temp->rollno);
+			if (temp->rollno == num)
+				goto A;
+			else
+				return;
+		}
+		temp1 = temp1->next;
 	}
 }
 
@@ -263,7 +271,7 @@ int searchRollnumber(int Rollnumber)
 {
 	struct node *temp = head;
 
-	while (temp->next != NULL) {
+	while (temp != NULL) {
 		if (temp->rollno == Rollnumber)
 			return 1;
 		temp = temp->next;
