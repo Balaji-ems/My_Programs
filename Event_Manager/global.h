@@ -13,5 +13,7 @@ enum Events {
     MAX
 };
 
-static char *events[] = {"Event one", "Event two", "Event three", "Event four",		"Event five", "Event six", "Event seven", "Event eight"};
+static char *events[] = {"Event one", "Event two", "Event three", "Event four",
+			 "Event five", "Event six", "Event seven",
+			 "Event eight"};
 #endif

@@ -22,6 +22,8 @@ int main(void)
 		printf("Enter a valid event id\n");
 		return 0;
 	}
+	printf("\n");
 	display_events(search_event-1, events[search_event-1]);
 	printf("\n");
+
 }

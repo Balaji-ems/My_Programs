@@ -1,1 +1,1 @@
-void subscribe(int,void(*)(char*));
+void subscribe(int, void(*)(char *));

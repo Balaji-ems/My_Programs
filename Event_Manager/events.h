@@ -1,1 +1,1 @@
-void display_events(int,char*);
+void display_events(int, char *);
