@@ -21,8 +21,8 @@ int main(void)
 	for (row = 0; row < input; row++) {
 		for (coloumn = 0; coloumn < input; coloumn++) {
 
-			test = coloumn + row == input - 1;
-			if (row == 0 || row == input-1 || test)
+			if (row == 0 || row == input-1 ||
+				coloumn + row == input - 1)
 				printf("*");
 			else
 				printf(" ");
