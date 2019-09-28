@@ -122,7 +122,7 @@ void display(void)
 	struct node *temp1 = head;
 
 	if (head == NULL) {
-		printf("List is empty!!");
+		printf("Database is empty !!\n");
 		return;
 	}
 
@@ -140,12 +140,10 @@ void display(void)
 		printf("\nEnter a valid roll number to %s\n", __func__);
 		temp1 = head;
 		Displayall();
-		printf("\n");
 		return;
 	}
 
-	printf("Name        : %s", temp1->name);
-	printf("\n");
+	printf("Name        : %s\n", temp1->name);
 	printf("Roll number : %d\n\n", temp1->rollno);
 	printf("Qualities            : Blackmark\n");
 
@@ -171,7 +169,7 @@ void update(void)
 	struct node *temp = head;
 
 	if (head == NULL) {
-		printf("List is empty !!");
+		printf("Database is empty !!\n");
 		return;
 	}
 
@@ -218,7 +216,7 @@ void delete(int key)
 	printf("\n");
 
 	if (head == NULL) {
-		printf("The list is empty !!\n");
+		printf("Database is empty !!\n");
 		return;
 	}
 
@@ -235,7 +233,7 @@ void delete(int key)
 	}
 
 	if (temp == NULL) {
-		printf("Roll number not found in the list\n");
+		printf("Roll number not found in the Database\n");
 		Displayall();
 		return;
 	}
@@ -274,15 +272,15 @@ void Displayall(void)
 	int i = 1;
 
 	if (temp == NULL) {
-		printf("No data available\n");
+		printf("Database is empty !!\n");
 		return;
 	}
 
-	printf("\nAvailable student database\n");
-	printf("S.No - Name                 : Roll Number\n");
+	printf("\n\tAvailable student database\n");
+	printf("S.Number   Name                   Roll Number\n");
 
 	while (temp != NULL) {
-		printf("%4d - %-20s : %d\n", i++,temp->name, temp->rollno);
+		printf("%8d   %-20s   %d\n", i++,temp->name, temp->rollno);
 		temp = temp->next;
 	}
 }
