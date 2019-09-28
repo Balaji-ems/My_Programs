@@ -255,8 +255,8 @@ int searchRollnumber(int Rollnumber)
 
 	while (temp != NULL) {
 		if (temp->rollno == Rollnumber) {
-			printf("\nRoll number already exists ! Please enter a "
-				"valid Roll number\n");
+			printf("\nRoll number already exists !");
+			printf("Enter a valid Roll number\n");
 			return 1;
 		}
 		temp = temp->next;
@@ -280,7 +280,7 @@ void Displayall(void)
 	printf("S.Number   Name                   Roll Number\n");
 
 	while (temp != NULL) {
-		printf("%8d   %-20s   %d\n", i++,temp->name, temp->rollno);
+		printf("%8d   %-20s   %d\n", i++, temp->name, temp->rollno);
 		temp = temp->next;
 	}
 }
