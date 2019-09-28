@@ -15,7 +15,7 @@
 int main(void)
 
 {
-	int input, row, coloumn, test;
+	int input, row, coloumn;
 
 	scanf("%d", &input);
 	for (row = 0; row < input; row++) {
