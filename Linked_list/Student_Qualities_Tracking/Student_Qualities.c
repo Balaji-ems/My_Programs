@@ -43,8 +43,10 @@ int main(void)
 
 	printf("\t\t Student Quality Tracking\n");
 	while (1) {
-		printf("Choose an option from the list given below\n");
-		printf("1.Insert\n2.Display\n3.Delete\n4.Update\n5.Exit\n");
+		printf("Choose any of the operations given below\n");
+		printf("1.Insert  Student data\n2.Display Student data\n"
+			"3.Delete  Student data\n4.Update  Student data\n"
+			"5.Display student database\n6.Exit\n");
 
 		scanf("%d", &choice);
 
@@ -64,6 +66,9 @@ int main(void)
 			update();
 			break;
 		case 5:
+			Displayall();
+			break;
+		case 6:
 			if (head != NULL)
 				free(head);
 			exit(0);
@@ -134,12 +139,7 @@ void display(void)
 	if (temp1 == NULL) {
 		printf("\nEnter a valid roll number to %s\n", __func__);
 		temp1 = head;
-		printf("\nAvailable student details are :\n\n");
-		printf("Name                 : Roll Number\n");
-		while (temp1 != NULL) {
-			printf("%-20s : %d\n", temp1->name, temp1->rollno);
-			temp1 = temp1->next;
-		}
+		Displayall();
 		printf("\n");
 		return;
 	}
@@ -188,13 +188,7 @@ void update(void)
 
 	if (temp == NULL) {
 		printf("Enter a valid roll number to %s", __func__);
-		temp = head;
-		printf("\nAvailable student details are :\n");
-		printf("Name                 : Roll Number\n");
-		while (temp != NULL) {
-			printf("%-20s : %d\n", temp->name, temp->rollno);
-			temp = temp->next;
-		}
+		Displayall();
 		return;
 	}
 
@@ -242,6 +236,7 @@ void delete(int key)
 
 	if (temp == NULL) {
 		printf("Roll number not found in the list\n");
+		Displayall();
 		return;
 	}
 
@@ -269,4 +264,25 @@ int searchRollnumber(int Rollnumber)
 		temp = temp->next;
 	}
 	return 0;
+}
+
+/* To display the entire database */
+
+void Displayall(void)
+{
+	struct node *temp = head;
+	int i = 1;
+
+	if (temp == NULL) {
+		printf("No data available\n");
+		return;
+	}
+
+	printf("\nAvailable student database\n");
+	printf("S.No - Name                 : Roll Number\n");
+
+	while (temp != NULL) {
+		printf("%4d - %-20s : %d\n", i++,temp->name, temp->rollno);
+		temp = temp->next;
+	}
 }
