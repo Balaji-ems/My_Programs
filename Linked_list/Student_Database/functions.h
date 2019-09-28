@@ -9,5 +9,5 @@ void searchbyRollno(void);
 void deleteatEnd(void);
 void insertatMiddle(int);
 void insert(void);
-
+int  searchRollnumber(int);
 #endif

@@ -55,6 +55,10 @@ int main(void)
 			display();
 			break;
 		case 3:
+			if (head == NULL) {
+				printf("The list is empty !\n");
+				break;
+			}
 			printf("Enter the roll number of the student to "
 				"delete the data : ");
 			scanf("%d", &ch);
@@ -86,11 +90,17 @@ int main(void)
 void insert(void)
 {
 	struct node *temp = (struct node *)malloc(sizeof(struct node));
+	int    check;
 
-	printf("\nEnter the roll number  of the student : ");
-	scanf("%d", &temp->rollno);
 	printf("\nEnter the name of the student         : ");
 	scanf("%s", temp->name);
+A:
+	printf("\nEnter the roll number of the student  : ");
+	scanf("%d", &temp->rollno);
+
+	check = searchRollnumber(temp->rollno);
+	if (check == 1)
+		goto A;
 
 	if (head == NULL) {
 		temp->next = NULL;
@@ -109,13 +119,19 @@ void insertatEnd(void)
 {
 	struct node *temp = (struct node *)malloc(sizeof(struct node));
 	struct node *temp1 = head;
+	int    check;
 
-	printf("\nEnter the roll number of the student : ");
-	scanf("%d", &temp->rollno);
 	printf("\nEnter the name of the student        : ");
 	scanf("%s", temp->name);
+B:
+	printf("\nEnter the roll number of the student        : ");
+	scanf("%d", &temp->rollno);
 	temp->next = NULL;
-	
+
+	check = searchRollnumber(temp->rollno);
+	if (check == 1)
+		goto B;
+
 	if (head == NULL)
 		head = temp;
 	else {
@@ -131,7 +147,7 @@ void insertatEnd(void)
 
 void insertatMiddle(int posistion)
 {
-	int    count = 1;
+	int    count = 1, check;
 	struct node *temp = head;
 	struct node *temp1 = (struct node *)malloc(sizeof(struct node));
 	struct node *temp2 = NULL;
@@ -144,10 +160,15 @@ void insertatMiddle(int posistion)
 		temp = temp->next;
 	}
 
-	printf("\nEnter the roll number of the student : ");
-	scanf("%d", &temp1->rollno);
 	printf("\nEnter the name of the student        : ");
 	scanf("%s", temp1->name);
+C:
+	printf("\nEnter the name of the student        : ");
+	scanf("%d", &temp1->rollno);
+
+	check = searchRollnumber(temp1->rollno);
+	if (check == 1)
+		goto C;
 
 	temp2->next = temp1;
 	temp1->next = temp;
@@ -254,12 +275,6 @@ void delete(int key)
 	struct node *temp1;
 
 	printf("\n");
-
-	if (head == NULL) {
-		printf("The list is empty !!\n");
-		return;
-	}
-
 	if (temp != NULL && temp->rollno == key) {
 		free(temp);
 		head = head->next;
@@ -280,4 +295,25 @@ void delete(int key)
 	temp1->next = temp->next;
 	free(temp);
 	printf("Deleted Successfully\n");
+}
+
+/*
+ * Function to search the Roll number of the student
+ * in the database. If the roll number is present in the
+ * database returns 1 else returns 0.
+ */
+
+int searchRollnumber(int Rollnumber)
+{
+	struct node *temp = head;
+
+	while (temp != NULL) {
+		if (temp->rollno == Rollnumber) {
+			printf("\nRoll number already exists ! Please enter a "
+					"valid Roll number\n");
+			return 1;
+		}
+		temp = temp->next;
+	}
+	return 0;
 }
