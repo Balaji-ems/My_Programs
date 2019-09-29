@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0
-
 /*
  *          1
  *        2 3 2

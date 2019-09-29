@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: GPL-3.0
-
 #include <stdio.h>
 #include "module.h"
 #include "events.h"

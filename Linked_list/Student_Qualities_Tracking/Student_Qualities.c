@@ -1,6 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0
-
-#include "functions.h"
+`#include "functions.h"
 #include <stdio.h>
 #include <stdlib.h>
 
