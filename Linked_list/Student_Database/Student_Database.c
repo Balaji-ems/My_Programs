@@ -18,13 +18,14 @@ struct node {
 
 /*
  * User choice to isert,delete,display,search the details
+ * in the database
  */
 
 int main(void)
 {
-	int ch, total_node = 1;
+	int ch, total_node = 0;
 
-	printf("\t\tStudent Data\n");
+	printf("\t\tStudent Database\n");
 
 	while (1) {
 		printf("\n1.Insert Data\n2.Display Data\n3.Delete Data\n"
@@ -38,18 +39,17 @@ int main(void)
 			printf("Enter the posistion to insert the data : ");
 			scanf("%d", &ch);
 
-			if (ch > total_node) {
-				printf("\nPosistion is greater than list size\n");
-				printf("Total size of the list is %d", total_node - 1);
-				break;
-			} else if (ch == 1)
+			if (ch < 1 || ch > total_node + 1)
+				printf("\nInvalid posistion. Total size of "
+				"Database is %d", total_node);
+			else if (ch == 1)
 				insert();
-			else if (ch == total_node)
+			else if (ch == total_node + 1)
 				insertatEnd();
 			else
 				insertatMiddle(ch);
-			
-			total_node++;	
+
+			total_node++;
 			break;
 		case 2:
 			display();
@@ -68,7 +68,10 @@ int main(void)
 			searchbyName();
 			break;
 		case 5:
-			searchbyRollno();
+			printf("Enter the roll number of the Student to"
+					" search : ");
+			scanf("%d", &ch);
+			searchRollnumber(ch, 1);
 			break;
 		case 6:
 			if (head != NULL)
@@ -84,7 +87,7 @@ int main(void)
 
 /*
  *  Function to insert a name and roll no of a student
- *  It add the node at first
+ *  It add the node at first, head node wil be changed
  */
 
 void insert(void)
@@ -98,7 +101,7 @@ A:
 	printf("\nEnter the roll number of the student  : ");
 	scanf("%d", &temp->rollno);
 
-	check = searchRollnumber(temp->rollno);
+	check = searchRollnumber(temp->rollno, 0);
 	if (check == 1)
 		goto A;
 
@@ -112,7 +115,8 @@ A:
 }
 
 /*
- * Function to add the student data at the last
+ * Function to add the student data at the last.
+ * Last node of the list will get the address of the new node.
  */
 
 void insertatEnd(void)
@@ -121,14 +125,14 @@ void insertatEnd(void)
 	struct node *temp1 = head;
 	int    check;
 
-	printf("\nEnter the name of the student        : ");
+	printf("\nEnter the name of the student               : ");
 	scanf("%s", temp->name);
 B:
 	printf("\nEnter the roll number of the student        : ");
 	scanf("%d", &temp->rollno);
 	temp->next = NULL;
 
-	check = searchRollnumber(temp->rollno);
+	check = searchRollnumber(temp->rollno, 0);
 	if (check == 1)
 		goto B;
 
@@ -142,7 +146,9 @@ B:
 }
 
 /*
- * Function to insert a student data at the middle of the list
+ * Function to insert a student data at the middle of the list.
+ * Address of the previous node is changed with the new node.
+ * New node will have the address of previous node's next node.
  */
 
 void insertatMiddle(int posistion)
@@ -163,10 +169,10 @@ void insertatMiddle(int posistion)
 	printf("\nEnter the name of the student        : ");
 	scanf("%s", temp1->name);
 C:
-	printf("\nEnter the name of the student        : ");
+	printf("\nEnter the Roll number of the student : ");
 	scanf("%d", &temp1->rollno);
 
-	check = searchRollnumber(temp1->rollno);
+	check = searchRollnumber(temp1->rollno, 0);
 	if (check == 1)
 		goto C;
 
@@ -198,46 +204,11 @@ void display(void)
 }
 
 /*
- * The function will tell wheater the given Rollno is in the list or not
- */
-
-void searchbyRollno(void)
-{
-	int    flag = 0, searchElement, pos = 0;
-	struct node *temp1 = head;
-
-	if (head == NULL) {
-		printf("List is empty\n");
-		return;
-	}
-
-	printf("\nEnter the roll no to search : ");
-	scanf("%d", &searchElement);
-
-	while (temp1 != NULL) {
-		pos += 1;
-
-		if (temp1->rollno == searchElement) {
-			flag = 1;
-			break;
-		}
-		temp1 = temp1->next;
-	}
-
-	if (flag == 1)
-		printf("\nRoll no %d found at %d position\n",
-			searchElement, pos);
-	else
-		printf("\nRoll no %d not found in list\n", searchElement);
-}
-
-/*
  * The function will tell wheater the given Name is in the list or not
  */
 
 void searchbyName(void)
 {
-	int    flag = 0, pos = 0;
 	char   search[20];
 	struct node *temp1 = head;
 
@@ -250,17 +221,14 @@ void searchbyName(void)
 	scanf("%s", search);
 
 	while (temp1 != NULL) {
-		pos += 1;
 		if (strcmp(temp1->name, search) == 0) {
-			flag = 1;
-			break;
+			printf("\nName %s is found at the list Roll number of "
+				"the student is %d\n", search, temp1->rollno);
+			return;
 		}
 		temp1 = temp1->next;
 	}
-	if (flag == 1)
-		printf("\nName %s found at %d position\n", search, pos);
-	else
-		printf("\nName %s not found in list\n", search);
+	printf("\nName %s not found in list\n", search);
 }
 
 
@@ -303,14 +271,23 @@ void delete(int key)
  * database returns 1 else returns 0.
  */
 
-int searchRollnumber(int Rollnumber)
+int searchRollnumber(int Rollnumber, int purpose)
 {
 	struct node *temp = head;
 
+	if (head == NULL && purpose) {
+		printf("Database is empty !!\n");
+		return -1;
+	}
+
 	while (temp != NULL) {
 		if (temp->rollno == Rollnumber) {
-			printf("\nRoll number already exists ! Please enter a "
-					"valid Roll number\n");
+			if (purpose)
+				printf("The Roll number is in the Database\n"
+				"Name of the student : %s\n", temp->name);
+			else
+				printf("Roll Number already exists !!\n"
+					"Plese enter a valid roll number\n");
 			return 1;
 		}
 		temp = temp->next;
