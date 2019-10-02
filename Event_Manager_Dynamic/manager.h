@@ -1,3 +1,5 @@
-void createnode(int);
-void subscribeEvent();
-void publishEvent(int,void(*)(char));
+void createnode(char *, void(*)(char *));
+void subscribeEvent(char *, int data);
+void publishEvent(int);
+void free_memory(void);
+void display(void);

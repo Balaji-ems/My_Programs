@@ -1,60 +1,98 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include "head.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "manager.h"
 
-struct node
-{
-    int interest;
-    struct node* next;
-    char module_name;
-}*head=NULL;
+#define check_bit(value,posistion) ((value) & 1 << (posistion))
+#define set_bit(value,posistion)  (value = value | (1 << posistion))
+#define clear_bit(value,posistion) (value = value & (~(1 << posistion)))
 
-void createnode(int size)
+enum state {
+	INITIALIZED = 0,
+	SUBSCRIBED
+};
+
+struct node {
+	int interest;
+	struct node *next;
+	char module_name[10];
+	void(*ptr)(char *);
+	int state;
+
+} *head = NULL;
+
+struct event {
+	char *event_name;
+	struct event *next;
+} *event_head;
+
+void createnode(char *name, void(*ptr)(char *)) 
 {
-    int temp_interest;
-    struct node* temp1;
-    char ch;
-    for(int i = 0;i < size;i++) {
+	int temp_interest;
+	struct node* temp1;
+
 	struct node* temp = malloc(sizeof(struct node));
-	printf("Enter module name : ");
-	scanf("%c",&ch);
-	printf("%c",ch);
-	temp->module_name=ch;
-	temp->interest=0;
+	
+	strcpy(temp->module_name,name);
+	temp->interest = 15;
+	temp->ptr = ptr;
 	temp->next = NULL;
+	temp->state = INITIALIZED;
 
 	if(head == NULL) {
-	    head = temp;
-	    continue;
+		head = temp;
+		return;
 	}
 
 	temp1 = head;
-	while(temp1->next != NULL) {
-	    temp1 = temp1->next;
-	}
+
+	while (temp1->next != NULL)
+		temp1 = temp1->next;
+	
 	temp1->next = temp;
-    }
 }
 
-void subscribeEvent()
+void subscribeEvent(char *name, int data)
 {
-    struct node* temp = head;
-    while(temp != NULL) {
-	printf("Enter the subscribtion details of %c\n",temp->module_name);
-	scanf("%d",&temp->interest);
-	temp = temp->next;
-    }
-}
-
-/*
-void publishEvent(int event,void(*ptr)(char))
-{
-    struct node* temp = head;
-    while(temp != NULL) {
-	if(check_bit(temp->interest,event-1)) {
-	    (*ptr)(temp->module_name);
+	struct node* temp = head;
+	printf("%s\n", name);
+	while (temp != NULL) {
+		if (strcmp(name, temp->module_name) == 0) {
+			temp->interest = data;
+			temp->state = SUBSCRIBED;
+			return;
+		}
+		temp = temp->next;
 	}
-	temp = temp->next;
-    }
 }
-*/
+
+
+void publishEvent(int event)
+{
+	struct node* temp = head;
+	while(temp != NULL) {
+		if(check_bit(temp->interest,event-1)) {
+			(temp->ptr)(temp->module_name);
+		}
+		temp = temp->next;
+	}
+}
+
+void free_memory(void)
+{
+	free(head);
+}
+
+void display(void)
+{
+	struct node *temp = head;
+
+	while (temp != NULL) {
+		printf("%s\n", temp->module_name);
+		temp = temp->next;
+	}
+}
+
+void createEvent(char *event_name)
+{
+}	

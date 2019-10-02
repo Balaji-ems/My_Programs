@@ -1,24 +1,28 @@
 #include "manager.h"
+#include "module.h"
 #include <stdio.h>
-void print(char ch)
+
+void create(char *name, void(*ptr)(char *))
 {
-    printf("Module %c is interested in the event",ch);
+    createnode(name, ptr);
 }
 
-//void(*ptr)(char)=&print;
-
-void create(int num)
+void subscribe(char *name, int data)
 {
-    createnode(num);
+    subscribeEvent(name, data);
 }
 
-void subscribe()
-{
-    void subscribeEvent();
-}
-/*
 void publish(int num)
 {
-    void publishEvent(num,&print);
+    publishEvent(num);
 }
-*/
+
+void free_mem(void)
+{
+	free_memory();
+}
+
+void Display(void)
+{
+	display();
+}
