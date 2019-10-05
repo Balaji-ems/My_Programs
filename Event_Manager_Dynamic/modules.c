@@ -26,3 +26,13 @@ void Display(void)
 {
 	display();
 }
+
+void eventCreate(char *event_name)
+{
+	createEvent(event_name);
+}
+
+void eventDisplay(void)
+{
+	displayEvent();
+}
