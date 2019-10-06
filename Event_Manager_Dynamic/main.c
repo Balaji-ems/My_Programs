@@ -45,19 +45,26 @@ A:
 				break;
 			}
 			Display();
+C:			
 			printf("Enter the name of the module : ");
 			scanf("%s", name);
+
+			if (moduleSearch(name) == 0) {
+				printf("Enter a existing module name\n");
+				goto C;
+			}
+
 			printf("Enter the subscribtion details : ");
 			scanf("%d", &sub_data);
-			
+
 			subscribe(name, sub_data);
-			
+
 			break;
 
 		case 3:
 			printf("Enter number of events to create : ");
 			scanf("%d", &size);
-			
+
 			for (index = 0; index < size; index++) {
 				printf("Enter the Event Name : ");
 				scanf("%s", name);
@@ -81,9 +88,9 @@ B:
 
 			printf("Enter the event number to publish: ");
 			scanf("%d", &choice);
-			
+
 			publish(choice);
-			
+
 			break;
 
 		case 5:
