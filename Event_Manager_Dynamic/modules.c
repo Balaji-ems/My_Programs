@@ -1,6 +1,5 @@
 #include "manager.h"
 #include "module.h"
-#include <stdio.h>
 
 void create(char *name, void(*ptr)(char *))
 {
@@ -35,4 +34,14 @@ void eventCreate(char *event_name)
 void eventDisplay(void)
 {
 	displayEvent();
+}
+
+int moduleSearch(char *name)
+{
+	return searchModule(name);
+}
+
+int eventSearch(char *name)
+{
+	return searchEvent(name);
 }

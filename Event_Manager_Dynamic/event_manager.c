@@ -136,3 +136,27 @@ void displayEvent(void)
 		temp = temp->next;
 	}
 }
+
+int searchModule(char *name)
+{
+	struct node *temp = head;
+
+	while (temp != NULL) {
+		if (strcmp(temp->module_name, name) == 0)
+			return 1;
+		temp = temp->next;
+	}
+	return 0;
+}
+
+int searchEvent(char *name)
+{
+	struct event *temp = event_head;
+
+	while (temp != NULL) {
+		if (strcmp(temp->event_name , name) == 0)
+			return 1;
+		temp = temp->next;
+	}
+	return 0;
+}

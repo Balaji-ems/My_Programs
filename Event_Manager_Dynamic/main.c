@@ -23,8 +23,16 @@ int main(void)
 			printf("Enter the no of modules to create : ");
 			scanf("%d", &size);
 			for ( ; index < size; index++) {
+A:				
 				printf("Enter the Module Name :");
 				scanf("%s", name);
+
+				if (moduleSearch(name)) {
+					printf("Module name already Exists !\n"
+						"please enter a new name\n");
+					goto A;
+				}
+
 				create(name, callback);
 			}
 			index = 0;
@@ -53,6 +61,12 @@ int main(void)
 			for (index = 0; index < size; index++) {
 				printf("Enter the Event Name : ");
 				scanf("%s", name);
+B:
+				if (eventSearch(name)) {
+					printf("Event name already Exists !\n"
+						"please enter a new name\n");
+					goto B;
+				}
 				eventCreate(name);
 			}
 			index = 0;
