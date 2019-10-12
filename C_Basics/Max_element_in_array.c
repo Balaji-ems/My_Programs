@@ -19,7 +19,7 @@ A:
 	scanf("%d", ptr);
 	max_element = *ptr;
 
-	for(index = 1;index < sizeof_array; index++) {
+	for(index = 1; index < sizeof_array; index++) {
 		scanf("%d", ptr + index);
 		if (*(ptr + index) > max_element)
 			max_element = *(ptr + index);

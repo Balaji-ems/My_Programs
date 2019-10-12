@@ -1,25 +1,4 @@
-`#include "functions.h"
-#include <stdio.h>
-#include <stdlib.h>
-
-enum Qualities {
-	STUDIES = 0,
-	DISCIPLINE,
-	SPORTS,
-	ATTENDANCE,
-	RAGGING,
-	COMMUNICATION,
-	RESPECT_OTHERS,
-	MAX
-};
-
-char *Quality[] = {"Studies", "Disipline", "Sport", "Attendance",
-		   "Ragging", "Communication", "Respect_others"};
-
-#define check_bit(value, posistion) ((value) & 1 << (posistion))
-#define set_bit(value, posistion)   (value = value | (1 << posistion))
-#define clear_bit(value, posistion) (value = value & (~(1 << posistion)))
-
+#include "functions.h"
 /*
  * structure to store the name , rollno , qualities of a student
  */
@@ -108,6 +87,7 @@ A:
 			temp1 = temp1->next;
 		temp1->next = temp;
 	}
+	sort();
 }
 
 /*
@@ -280,5 +260,32 @@ void Displayall(void)
 	while (temp != NULL) {
 		printf("%8d   %-20s   %d\n", i++, temp->name, temp->rollno);
 		temp = temp->next;
+	}
+}
+
+/* Function to sort the linked list */
+
+void sort(void)
+{
+	struct node *i, *j;
+	int rollno, quality;
+	char name[20];
+
+	for (i = head; i != NULL; i = i->next) {
+		for (j = i->next; j != NULL; j = j->next) {
+			if (i->rollno > j->rollno) {
+				rollno = i->rollno;
+				quality = i->quality;
+				strcpy(name, i->name);
+
+				i->rollno = j->rollno;
+				i->quality = j->quality;
+				strcpy(i->name, j->name);
+
+				j->rollno = rollno;
+				j->quality = quality;
+				strcpy(j->name, name);
+			}
+		}
 	}
 }
