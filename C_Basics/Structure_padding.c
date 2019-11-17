@@ -1,8 +1,8 @@
 /*
- * In order to align the data in memory, one or more empty bytes (addresses)
- * are inserted (or left empty) between memory addresses which are allocated
- * for other structure members while memory allocation. This concept is
- * called structure padding.
+ * In order to align the data in memory, one or more empty bytes
+ * (addresses) are inserted (or left empty) between memory addresses
+ * which are allocated for other structure members while memory
+ * allocation. This concept is called structure padding.
  */
 
 /* Structure 1 to contain some variables */
