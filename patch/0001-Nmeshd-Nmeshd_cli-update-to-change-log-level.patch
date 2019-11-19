@@ -1,0 +1,161 @@
+From ae960db52b658d5a21a008be8c9aef4c6ecde29d Mon Sep 17 00:00:00 2001
+From: Balaji Eswaramurthy <balaji.eswaramurthy@qubercomm.com>
+Date: Tue, 22 Oct 2019 09:52:03 +0530
+Subject: [PATCH] Nmeshd: Nmeshd_cli update to change log level
+
+* Added log level option in nmesh_cli.
+* Now we can see the current log level or change the log level
+  by using the log level.
+---
+ cloudapd/capd_cloud.c | 14 ++++++++++++++
+ cloudapd/capd_main.c  |  7 ++++++-
+ cloudapd/debug.c      | 31 ++++++++++++++++++++++++++++++-
+ cloudapd_cli/main.c   | 11 +++++++++++
+ include/debug.h       |  4 ++++
+ 5 files changed, 65 insertions(+), 2 deletions(-)
+
+diff --git a/cloudapd/capd_cloud.c b/cloudapd/capd_cloud.c
+index 9e4d7e1..264d3c9 100644
+--- a/cloudapd/capd_cloud.c
++++ b/cloudapd/capd_cloud.c
+@@ -1097,6 +1097,20 @@ void capd_ctrl_iface_receive(int sock, void *priv,
+ 		}
+ 	} else if (!strncmp(buf, "MEM_USAGE", 9)) {
+ 		reply_len = mtracker_get_current_memory_usage(reply, reply_size);
++	} else if (!strncmp(buf, "LOG_LEVEL,", 10)) {
++		buf += 10;
++		if (*buf) {
++			res = str_to_log_level(buf);
++			if (res < 0) {
++				reply_len = -1;
++				goto fail;
++			}
++			dbg_level = res;
++			reply_len = snprintf(reply, reply_size, "OK\n");
++		} else {
++			reply_len = snprintf(reply, reply_size, "%s\n",
++					     log_level_str(dbg_level));
++		}
+ 	} else {
+ 		cap_printf(MSG_DEBUG, "Invalid CTRL_IFACE command received");
+ 		reply_len = -1;
+diff --git a/cloudapd/capd_main.c b/cloudapd/capd_main.c
+index 0007413..2967927 100644
+--- a/cloudapd/capd_main.c
++++ b/cloudapd/capd_main.c
+@@ -236,6 +236,7 @@ static void print_usage()
+ 	printf("\t-p\tCloud Configuration file with path\n");
+ 	printf("\t-c\tDevice Configuration file with path\n");
+ 	printf("\t-i\tDevice identifier interface name\n");
++	printf("\t-d\tIncrease debugging verbosity (-dd even more)\n");
+ }
+ 
+ int capd_configure_radios(struct capd *capd)
+@@ -310,7 +311,7 @@ int main(int argc, char *argv[])
+ 
+ 	opterr = 0;
+ 
+-	while ((c = getopt(argc, argv, "gnb:hp:lc:i:")) != -1) {
++	while ((c = getopt(argc, argv, "gnb:hp:lc:i:d")) != -1) {
+ 		switch (c) {
+ 		case 'g':
+ 			gw_mode = 1;
+@@ -333,6 +334,10 @@ int main(int argc, char *argv[])
+ 		case 'i':
+ 			intf_name = optarg;
+ 			break;
++		case 'd':
++			if (dbg_level > 0)
++				dbg_level--;
++			break;
+ 		case '?':
+ 			fprintf(stderr, "Unknown option: -%c\n\n", optopt);
+ 			print_usage();
+diff --git a/cloudapd/debug.c b/cloudapd/debug.c
+index d0245a0..53c59d3 100644
+--- a/cloudapd/debug.c
++++ b/cloudapd/debug.c
+@@ -8,7 +8,36 @@
+ #include <stdarg.h>
+ #include "debug.h"
+ 
+-int dbg_level = MSG_DEBUG;
++int dbg_level = MSG_WARNING;
++
++const char *log_level_str(int level)
++{
++	switch (level) {
++	case MSG_DEBUG:
++		return "DEBUG";
++	case MSG_INFO:
++		return "INFO";
++	case MSG_WARNING:
++		return "WARNING";
++	case MSG_ERROR:
++		return "ERROR";
++	default:
++		return "Invalid";
++	}
++}
++
++int str_to_log_level(const char *log)
++{
++	if (!strcmp(log, "DEBUG"))
++		return MSG_DEBUG;
++	if (!strcmp(log, "INFO"))
++		return MSG_INFO;
++	if (!strcmp(log, "WARNING"))
++		return MSG_WARNING;
++	if (!strcmp(log, "ERROR"))
++		return MSG_ERROR;
++	return -1;
++}
+ 
+ void cap_printf(int level, const char *fmt, ...)
+ {
+diff --git a/cloudapd_cli/main.c b/cloudapd_cli/main.c
+index 71d6a8b..4234c69 100644
+--- a/cloudapd_cli/main.c
++++ b/cloudapd_cli/main.c
+@@ -145,6 +145,15 @@ static int capd_cli_get_mem_usage(struct capd_ctrl *ctrl, int argc, char *argv[]
+ 	return capd_cli_ctrl_cmd(ctrl, "MEM_USAGE", 9);
+ }
+ 
++static int capd_cli_log_level(struct capd_ctrl *ctrl, int argc, char *argv[])
++{
++	int res;
++	char cmd[25];
++
++	res = snprintf(cmd, 25, "LOG_LEVEL,%s", argc > 0 ? argv[0] : "");
++	return capd_cli_ctrl_cmd(ctrl, cmd, res);
++}
++
+ static const struct capd_cli_cmd cli_cmds[] = {
+ 	{"help", capd_cli_help, "= show command usage"},
+ 	{"apply_config", capd_cli_apply_config,
+@@ -156,6 +165,8 @@ static const struct capd_cli_cmd cli_cmds[] = {
+ 	 "<connected_nodes> <config>"},
+ 	{"send", capd_cli_send_data, "<index> <value=>"},
+ 	{"mem_usage", capd_cli_get_mem_usage, "= show the current dynamic memory usage"},
++	{"log_level", capd_cli_log_level, "= display the current log level\n"
++	 "<level> = update the log level\n"},
+ 	{ NULL, NULL, NULL }
+ };
+ 
+diff --git a/include/debug.h b/include/debug.h
+index 4f6a665..40ed6db 100644
+--- a/include/debug.h
++++ b/include/debug.h
+@@ -19,5 +19,9 @@ enum {
+ #define MACHEXSTR "%02x%02x%02x%02x%02x%02x"
+ 
+ void cap_printf(int level, const char *fmt, ...);
++const char *log_level_str(int level);
++int str_to_log_level(const char *log);
++
++extern int dbg_level;
+ 
+ #endif /* DEBUG_H */
+-- 
+2.7.4
+

@@ -1,0 +1,30 @@
+fork the repository
+
+clone the repository
+
+write the changes
+
+git remote add "name_given_by_you" "repository address"(base repository)
+
+git brach (new branch name) - [create a new branch]
+
+git add file_name (which you need to change)
+
+git commit -m"Commit title"
+
+git commit --amend (Type the commit decription)
+
+git format-patch -1
+
+run checkpatch
+
+git push origin (new branch name)
+
+
+Checkpatch :
+	~/qbc_lede/build_dir/target-arm_cortex-a15+neon-vfpv4_musl_eabi/linux-ipq806x/linux-4.9.77/scripts/checkpatch.pl -q --no-tree --no-signoff --max-line-length=100 --strict --show-types --showfile --ignore PREFER_KERNEL_TYPES,COMPARISON_TO_NULL,NEW_TYPEDEFS,FILE_PATH_CHANGES  (0001-Nmesh-Bug-fix.patch) patch-name
+
+
+scp /home/suku/dev/nmesh/ws/mbh0411/qbc_lede/bin/targets/ipq806x/generic/r5997-5387e62-ipq806x-asus_rt-ac58u-squashfs-sysupgrade.bin balaji@192.168.40.101:/tmp/
+
+grep -Rln "QBC_DISABLE_HOTSPOT_SUPPORT" .

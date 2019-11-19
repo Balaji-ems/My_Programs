@@ -1,0 +1,85 @@
+Ping test from root to mesh
+
+root@Qubercomm:~# ping 172.16.12.132
+PING 172.16.12.132 (172.16.12.132): 56 data bytes
+64 bytes from 172.16.12.132: seq=0 ttl=64 time=7.003 ms
+64 bytes from 172.16.12.132: seq=1 ttl=64 time=3.207 ms
+64 bytes from 172.16.12.132: seq=2 ttl=64 time=47.653 ms
+64 bytes from 172.16.12.132: seq=3 ttl=64 time=1.510 ms
+64 bytes from 172.16.12.132: seq=4 ttl=64 time=12.633 ms
+64 bytes from 172.16.12.132: seq=5 ttl=64 time=16.901 ms
+64 bytes from 172.16.12.132: seq=6 ttl=64 time=2.547 ms
+64 bytes from 172.16.12.132: seq=7 ttl=64 time=9.666 ms
+64 bytes from 172.16.12.132: seq=8 ttl=64 time=3.281 ms
+64 bytes from 172.16.12.132: seq=9 ttl=64 time=3.102 ms
+64 bytes from 172.16.12.132: seq=10 ttl=64 time=1.918 ms
+64 bytes from 172.16.12.132: seq=11 ttl=64 time=1.789 ms
+64 bytes from 172.16.12.132: seq=12 ttl=64 time=10.245 ms
+64 bytes from 172.16.12.132: seq=13 ttl=64 time=10.946 ms
+64 bytes from 172.16.12.132: seq=14 ttl=64 time=6.518 ms
+^C
+--- 172.16.12.132 ping statistics ---
+15 packets transmitted, 15 packets received, 0% packet loss
+round-trip min/avg/max = 1.510/9.261/47.653 ms
+
+Ping test from root to station
+
+root@Qubercomm:~# ping 172.16.12.103
+PING 172.16.12.103 (172.16.12.103): 56 data bytes
+64 bytes from 172.16.12.103: seq=0 ttl=64 time=2.804 ms
+64 bytes from 172.16.12.103: seq=1 ttl=64 time=5.691 ms
+64 bytes from 172.16.12.103: seq=2 ttl=64 time=3.744 ms
+64 bytes from 172.16.12.103: seq=3 ttl=64 time=4.695 ms
+64 bytes from 172.16.12.103: seq=4 ttl=64 time=4.219 ms
+64 bytes from 172.16.12.103: seq=5 ttl=64 time=5.686 ms
+64 bytes from 172.16.12.103: seq=6 ttl=64 time=3.996 ms
+64 bytes from 172.16.12.103: seq=7 ttl=64 time=4.717 ms
+64 bytes from 172.16.12.103: seq=8 ttl=64 time=4.338 ms
+64 bytes from 172.16.12.103: seq=9 ttl=64 time=4.123 ms
+64 bytes from 172.16.12.103: seq=10 ttl=64 time=4.506 ms
+64 bytes from 172.16.12.103: seq=11 ttl=64 time=4.617 ms
+^C
+--- 172.16.12.103 ping statistics ---
+12 packets transmitted, 12 packets received, 0% packet loss
+round-trip min/avg/max = 2.804/4.428/5.691 ms
+
+Ping test from mesh to root
+
+root@Qubercomm:~# ping 172.16.12.1                                                     
+PING 172.16.12.1 (172.16.12.1): 56 data bytes                                          
+64 bytes from 172.16.12.1: seq=0 ttl=64 time=46.135 ms
+64 bytes from 172.16.12.1: seq=1 ttl=64 time=3.500 ms
+64 bytes from 172.16.12.1: seq=2 ttl=64 time=2.357 ms
+64 bytes from 172.16.12.1: seq=3 ttl=64 time=2.455 ms
+64 bytes from 172.16.12.1: seq=4 ttl=64 time=12.020 ms
+64 bytes from 172.16.12.1: seq=5 ttl=64 time=14.088 ms
+64 bytes from 172.16.12.1: seq=6 ttl=64 time=5.611 ms
+64 bytes from 172.16.12.1: seq=7 ttl=64 time=4.249 ms
+64 bytes from 172.16.12.1: seq=8 ttl=64 time=2.660 ms
+64 bytes from 172.16.12.1: seq=9 ttl=64 time=2.228 ms
+64 bytes from 172.16.12.1: seq=10 ttl=64 time=4.770 ms
+^C
+--- 172.16.12.1 ping statistics ---
+11 packets transmitted, 11 packets received, 0% packet loss
+round-trip min/avg/max = 2.228/9.097/46.135 ms
+
+Ping test from mesh to station
+
+root@Qubercomm:~# ping 172.16.12.242
+PING 172.16.12.242 (172.16.12.242): 56 data bytes
+64 bytes from 172.16.12.242: seq=0 ttl=64 time=1.374 ms
+64 bytes from 172.16.12.242: seq=1 ttl=64 time=1.325 ms
+64 bytes from 172.16.12.242: seq=2 ttl=64 time=2.053 ms
+64 bytes from 172.16.12.242: seq=3 ttl=64 time=1.086 ms
+64 bytes from 172.16.12.242: seq=4 ttl=64 time=1.522 ms
+64 bytes from 172.16.12.242: seq=5 ttl=64 time=1.272 ms
+64 bytes from 172.16.12.242: seq=6 ttl=64 time=1.473 ms
+64 bytes from 172.16.12.242: seq=7 ttl=64 time=2.138 ms
+64 bytes from 172.16.12.242: seq=8 ttl=64 time=1.469 ms
+64 bytes from 172.16.12.242: seq=9 ttl=64 time=1.415 ms
+64 bytes from 172.16.12.242: seq=10 ttl=64 time=1.118 ms
+64 bytes from 172.16.12.242: seq=11 ttl=64 time=1.745 ms
+^C
+--- 172.16.12.242 ping statistics ---
+12 packets transmitted, 12 packets received, 0% packet loss
+round-trip min/avg/max = 1.086/1.499/2.138 ms

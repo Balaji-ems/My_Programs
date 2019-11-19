@@ -1,0 +1,588 @@
+From adc7fa8d4fb4708b2409475d5254644225ad1d39 Mon Sep 17 00:00:00 2001
+From: Balaji Eswaramurthy <balaji.eswaramurthy@qubercomm.com>
+Date: Tue, 29 Oct 2019 12:33:17 +0530
+Subject: [PATCH] Nmeshd: Removed unnecessary strlen() function calls
+
+ Removed strlen() function call where it checks for string length
+ is greater than 0.
+
+ It is replaced by check for the first character is null or not.
+---
+ cloudapd/capd_cloud.c            | 10 +++++-----
+ cloudapd/capd_config.c           |  2 +-
+ cloudapd/capd_hostapd.c          |  4 ++--
+ cloudapd/capd_hotspot.c          |  2 +-
+ cloudapd/capd_interface.c        |  4 ++--
+ cloudapd/capd_mac80211.c         |  8 ++++----
+ cloudapd/capd_mesh.c             |  4 ++--
+ cloudapd/capd_recovery.c         |  2 +-
+ cloudapd/capd_station.c          |  8 ++++----
+ cloudapd/capd_supplicant.c       |  2 +-
+ cloudapd/cloudiface/cloudiface.c |  6 +++---
+ cloudapd/cloudiface/curl.c       |  4 ++--
+ cloudapd/cloudiface/json.c       | 20 ++++++++++----------
+ cloudapd/cloudiface/mqtt.c       |  2 +-
+ cloudapd/cloudiface/socket.c     |  2 +-
+ cloudapd/utils.c                 | 38 +++++++++++++++++++-------------------
+ 16 files changed, 59 insertions(+), 59 deletions(-)
+
+diff --git a/cloudapd/capd_cloud.c b/cloudapd/capd_cloud.c
+index 9e4d7e1..60d47e2 100644
+--- a/cloudapd/capd_cloud.c
++++ b/cloudapd/capd_cloud.c
+@@ -139,8 +139,8 @@ static void capd_store_vap_config(struct capd *capd, struct capd_vap *vap,
+ 
+ 	vap->oper.acl_policy = vcfg->policy;
+ 
+-	if ((strlen(vcfg->bridge) > 0) &&
+-	     strcmp(vap->bridge, vcfg->bridge)) {
++	if (*vcfg->bridge &&
++	    strcmp(vap->bridge, vcfg->bridge)) {
+ 		snprintf(vap->bridge, IFNAMSIZ, "%s", vcfg->bridge);
+ 		vap->flag |= VAP_FLAG_ATTR_COMMIT_PENDING;
+ 	}
+@@ -276,7 +276,7 @@ int capd_get_name_from_mac(struct capd *capd, unsigned char *mac, char *str)
+ 			      struct capd_uid_info, list) {
+ 		dl_list_for_each(mesh_info, &curr->mesh_info_list, struct capd_mesh_info, list) {
+ 			if (!memcmp(mesh_info->mac_address, mac, ETH_ALEN) &&
+-			    strlen(curr->uid_name)) {
++			    *curr->uid_name) {
+ 				strncpy(str, curr->uid_name, UID_LEN);
+ 				if (mesh_info->oper_band == RADIO_OPER_24GHZ)
+ 					strncat(str, "_2G", 3);
+@@ -463,7 +463,7 @@ int capd_apply_cld_config(struct capd *capd, struct dev_cfg *buf)
+ 	else
+ 		strcpy(capd->local_ifname, buf->wan_bridge);
+ 	if (hotspot_on) {
+-		if (strlen(buf->captive_portal_url) > 0) {
++		if (*buf->captive_portal_url) {
+ 			strcpy(capd->hs.captive_portal_url,
+ 			       buf->captive_portal_url);
+ 		}
+@@ -820,7 +820,7 @@ void capd_add_mesh_mac(struct dev_cfg *dev_cfg, int count, char *mac)
+ 	mesh_macs = zalloc(count * elemsize);
+ 	dev_cfg->ameshmacs.mesh_macs = mesh_macs;
+ 	for (indx = 0; indx < count; indx++) {
+-		if (temp != NULL && strlen(temp)) {
++		if (temp != NULL && *temp) {
+ 			strncpy(mesh_macs[indx].mac, temp,
+ 				sizeof(mesh_macs[indx].mac));
+ 		}
+diff --git a/cloudapd/capd_config.c b/cloudapd/capd_config.c
+index e5b9319..a63503d 100644
+--- a/cloudapd/capd_config.c
++++ b/cloudapd/capd_config.c
+@@ -203,7 +203,7 @@ static void config_read_authorized_mesh_macs(struct capd *capd, struct dev_cfg *
+ 		for (indx = 0; indx < mac_count; indx++) {
+ 			mesh_mac = &mesh_macs[indx];
+ 			mac_str = config_setting_get_string_elem(group_amesh_macs, indx);
+-			if (strlen(mac_str)) {
++			if (*mac_str) {
+ 				valid_macs++;
+ 				strncpy(mesh_mac->mac, mac_str, sizeof(mesh_mac->mac));
+ 			}
+diff --git a/cloudapd/capd_hostapd.c b/cloudapd/capd_hostapd.c
+index 8a306ac..a61e348 100644
+--- a/cloudapd/capd_hostapd.c
++++ b/cloudapd/capd_hostapd.c
+@@ -458,7 +458,7 @@ int hostapd_get_track_sta(struct capd *capd, struct capd_vap *vap,
+ 		return -1;
+ 	}
+ 
+-	if (strlen(reply) > 0) {
++	if (*reply) {
+ 		for (p = strtok(reply, "\n"); p != NULL; p = strtok(NULL, "\n")) {
+ 			sta = strdup(p);
+ 
+@@ -612,7 +612,7 @@ int hostapd_init(struct capd *capd)
+ 	if (ret < 0)
+ 		return -1;
+ 
+-	if (strlen(reply) > 0) {
++	if (*reply) {
+ 		ret = hostapd_delete_all_interfaces(capd, reply);
+ 		if (ret < 0)
+ 			return ret;
+diff --git a/cloudapd/capd_hotspot.c b/cloudapd/capd_hotspot.c
+index 79ebdde..83d91e7 100644
+--- a/cloudapd/capd_hotspot.c
++++ b/cloudapd/capd_hotspot.c
+@@ -611,7 +611,7 @@ int capd_hotspot_init(struct capd *capd)
+ 		return 0;
+ 	}
+ 
+-	if (!strlen(capd->hs.captive_portal_url)) {
++	if (!*capd->hs.captive_portal_url) {
+ 		cap_printf(MSG_DEBUG, "Captive portal URL is not configured "
+ 			  "by the cloud, using default URL");
+ 		strcpy(capd->hs.captive_portal_url, CAPD_HS_DEFAULT_REDIR_URL);
+diff --git a/cloudapd/capd_interface.c b/cloudapd/capd_interface.c
+index eaac7f8..fddc5ee 100644
+--- a/cloudapd/capd_interface.c
++++ b/cloudapd/capd_interface.c
+@@ -334,8 +334,8 @@ int capd_create_mesh_vap(struct capd *capd,
+ 	cap_printf(MSG_DEBUG, "Creating new Mesh vap %s with MAC: " MACSTR,
+ 		   vap->ifname, MAC2STR(vap->mac_address));
+ 
+-	if (br_name && strlen(br_name))
+-		 snprintf(vap->bridge, sizeof(vap->bridge), "%s", br_name);
++	if (br_name && *br_name)
++		snprintf(vap->bridge, sizeof(vap->bridge), "%s", br_name);
+ 	else
+ 		snprintf(vap->bridge, sizeof(vap->bridge), "br-wan");
+ 	ret = capd_drv_create_mesh_vap(capd, radio, vap);
+diff --git a/cloudapd/capd_mac80211.c b/cloudapd/capd_mac80211.c
+index 2496345..9f1090f 100644
+--- a/cloudapd/capd_mac80211.c
++++ b/cloudapd/capd_mac80211.c
+@@ -1126,7 +1126,7 @@ set_params:
+ 	}
+ 
+ 	snprintf(param, sizeof(param), "%s",
+-		 strlen(radio->oper.country_code) ? radio->oper.country_code : "00");
++		 *radio->oper.country_code ? radio->oper.country_code : "00");
+ 	SET_HAPD_PARAM("country_code", param);
+ 	snprintf(param, sizeof(param), "%d", 1);
+ 	SET_HAPD_PARAM("ieee80211d", param);
+@@ -1143,7 +1143,7 @@ set_params:
+ 			SET_HAPD_PARAM("chanlist", "36 40 44 48");
+ 	}
+ 
+-	if (strlen(vap->bridge) > 0)
++	if (*vap->bridge)
+ 		snprintf(param, sizeof(param), "%s", vap->bridge);
+ 
+ 	SET_HAPD_PARAM("bridge", param);
+@@ -1544,7 +1544,7 @@ static int mac80211_wpas_create_vap(struct capd *capd,
+ 		goto err_add;
+ 	}
+ 
+-	if (strlen(vap->bridge) > 0) {
++	if (*vap->bridge) {
+ 		ret = wpas_add_interface_bridge(drv->ioctl_soc,
+ 						vap->ifname,
+ 						vap->bridge);
+@@ -1592,7 +1592,7 @@ static int mac80211_del_mesh_vap(struct capd *capd,
+ 
+ 	wpas_disconnect_interface(vap);
+ 
+-	if (strlen(vap->bridge) > 0) {
++	if (*vap->bridge) {
+ 		ret = wpas_del_interface_bridge(drv->ioctl_soc,
+ 						vap->ifname,
+ 						vap->bridge);
+diff --git a/cloudapd/capd_mesh.c b/cloudapd/capd_mesh.c
+index 87b967d..62a5b19 100644
+--- a/cloudapd/capd_mesh.c
++++ b/cloudapd/capd_mesh.c
+@@ -150,7 +150,7 @@ int capd_mesh_cmd_handle_root_uid_response(struct capd *capd,
+ 	struct paas_param *paas;
+ 	struct mqtt *mqtt;
+ 
+-	if (strlen(capd->root_ap_uid) > 0)
++	if (*capd->root_ap_uid)
+ 		cap_printf(MSG_INFO, "Overwriting existing root AP UID with: %s",
+ 				   mesh->uid);
+ 	else
+@@ -566,7 +566,7 @@ sta_found:
+ 	steer_sta->total_nb++;
+ 	steer_sta->conn_time = sta->conn_time;
+ 
+-	if (strlen(sta->hostname) > 0)
++	if (*sta->hostname)
+ 		strcpy(steer_sta->hostname, sta->hostname);
+ 	hostapd_block_probe(capd, vap, sta);
+ 
+diff --git a/cloudapd/capd_recovery.c b/cloudapd/capd_recovery.c
+index 14979a9..2454bc0 100644
+--- a/cloudapd/capd_recovery.c
++++ b/cloudapd/capd_recovery.c
+@@ -165,7 +165,7 @@ static void capd_store_vap_config(struct capd *capd, struct capd_vap *vap, struc
+ 
+ 	vap->oper.ignore_broadcast_ssid = vcfg->ignore_broadcast_ssid;
+ 
+-	if ((strlen(vcfg->bridge) > 0) && strcmp(vap->bridge, vcfg->bridge))
++	if (*vcfg->bridge && strcmp(vap->bridge, vcfg->bridge))
+ 		snprintf(vap->bridge, IFNAMSIZ, "%s", vcfg->bridge);
+ }
+ 
+diff --git a/cloudapd/capd_station.c b/cloudapd/capd_station.c
+index 901d369..e761cc0 100644
+--- a/cloudapd/capd_station.c
++++ b/cloudapd/capd_station.c
+@@ -94,7 +94,7 @@ void capd_sta_ip_fetch_timer_handler(void *eloop_data, void *user_data)
+ 			}
+ 		}
+ 
+-		if (sta_ip_req->count == MAX_STAIP_TRY_COUNT && !strlen(sta_ip_req->ip_addr)) {
++		if (sta_ip_req->count == MAX_STAIP_TRY_COUNT && !*sta_ip_req->ip_addr) {
+ 			if (capd->dev_flag & DEV_CLOUD_INIT_DONE)
+ 				cloud_mesh_send_sta_ip_fetch_fail(capd->cag_priv, mac_addr,
+ 								  sta_ip_req->uid, CFG_TYPE_CLOUD);
+@@ -579,7 +579,7 @@ static void capd_sta_ip_fetch_req(struct capd *capd, unsigned char *sta_mac,
+ 							       capd_sta_ip_fetch_timer_handler,
+ 							       capd, NULL);
+ 			} else {
+-				if (strlen(capd->root_ap_uid)) {
++				if (*capd->root_ap_uid) {
+ 					mac_ntoa(sta_ip_req->mac_address, mac);
+ 					if (capd->dev_flag & DEV_CLOUD_INIT_DONE)
+ 						cloud_mesh_send_sta_ip_request(capd->cag_priv, mac,
+@@ -671,7 +671,7 @@ void capd_handle_sta_events(unsigned char *sta_mac, struct capd_vap *vap,
+ 		 if (capd->dev_flag & DEV_CLOUD_INIT_DONE) {
+ 			capd_sta_ip_fetch_req(capd, sta_mac, sta_event);
+ 
+-			if (capd->norm_mode && strlen(capd->root_ap_uid))
++			if (capd->norm_mode && *capd->root_ap_uid)
+ 				cloud_mesh_sta_event(capd->cag_priv, sta, sta_event, CFG_TYPE_CLOUD);
+ 			cloud_update_sta_disassoc_event(capd->cag_priv, sta, vap);
+ 
+@@ -684,7 +684,7 @@ void capd_handle_sta_events(unsigned char *sta_mac, struct capd_vap *vap,
+ 			dev_stats.stats.logs.log_str = log;
+ 			capd_cloud_upload_stats(capd, &dev_stats);
+ 		} else {
+-			if (capd->norm_mode && strlen(capd->root_ap_uid))
++			if (capd->norm_mode && *capd->root_ap_uid)
+ 				cloud_mesh_sta_event(capd, sta, sta_event, CFG_TYPE_LOCAL);
+ 		}
+ 	} else if (sta_event == STA_RRM_BEACON_REPORT) {
+diff --git a/cloudapd/capd_supplicant.c b/cloudapd/capd_supplicant.c
+index 8e2b5f5..fe01102 100644
+--- a/cloudapd/capd_supplicant.c
++++ b/cloudapd/capd_supplicant.c
+@@ -286,7 +286,7 @@ int wpas_init(struct capd *capd)
+ 	if (ret < 0)
+ 		return -1;
+ 
+-	if (strlen(reply) > 0) {
++	if (*reply) {
+ 		ret = wpas_delete_all_interfaces(capd, reply);
+ 		if (ret < 0)
+ 			return ret;
+diff --git a/cloudapd/cloudiface/cloudiface.c b/cloudapd/cloudiface/cloudiface.c
+index e5e1bef..46e277d 100644
+--- a/cloudapd/cloudiface/cloudiface.c
++++ b/cloudapd/cloudiface/cloudiface.c
+@@ -379,7 +379,7 @@ void qubercloud_register_topics(struct cloud_context *qc,
+ 		return;
+ 
+ 	for (i = 0; i < MQTT_MAX_TOPIC; i++) {
+-		if (!strlen(mqtt_topics[i]))
++		if (!*mqtt_topics[i])
+ 			continue;
+ 
+ 		mqtt_subscribe(&qp->mqtt, mqtt_topics[i]);
+@@ -670,7 +670,7 @@ int cloud_mesh_send_sta_ip_resp_to_node(void *priv, struct dl_list *sta_ip_req_l
+ 
+ 	dl_list_for_each_safe(sta_ip_req, tmp, sta_ip_req_list,
+ 			      struct capd_sta_ip_fetch_req, list) {
+-		if (!strlen(sta_ip_req->ip_addr))
++		if (!*sta_ip_req->ip_addr)
+ 			break;
+ 		if (strcmp(sta_ip_req->uid, mesh_uid))
+ 			continue;
+@@ -700,7 +700,7 @@ void cloud_mesh_send_sta_ip_resp(void *priv, struct dl_list *sta_ip_req_list, en
+ 
+ 	while ((sta_ip_req = dl_list_first(sta_ip_req_list,
+ 	       struct capd_sta_ip_fetch_req, list))) {
+-		if (!strlen(sta_ip_req->ip_addr))
++		if (!*sta_ip_req->ip_addr)
+ 			break;
+ 		cloud_mesh_send_sta_ip_resp_to_node(priv, sta_ip_req_list,
+ 						    sta_ip_req->uid, cfg);
+diff --git a/cloudapd/cloudiface/curl.c b/cloudapd/cloudiface/curl.c
+index ced770a..6e0a2dd 100644
+--- a/cloudapd/cloudiface/curl.c
++++ b/cloudapd/cloudiface/curl.c
+@@ -31,7 +31,7 @@ int curl_fetch_file(struct http *http, char *dst_file, char *src_path,
+ 		return -1;
+ 	}
+ 
+-	if (strlen(http->img_update_ca_cert) > 0 && http->img_update_tls_port) {
++	if (*http->img_update_ca_cert && http->img_update_tls_port) {
+ 		snprintf(url, sizeof(url), "https://%s:%d/%s",
+ 			 src_path, http->img_update_tls_port, src_file);
+ 	} else {
+@@ -87,7 +87,7 @@ int curl_get_config(struct http *http, char *uid)
+ 	if (!curl)
+ 		return -1;
+ 
+-	if (strlen(http->ca_cert) > 0 && http->tls_port) {
++	if (*http->ca_cert && http->tls_port) {
+ 		snprintf(url, sizeof(url), "https://%s:%d/%suid=%s",
+ 			 http->srvr_addr, http->tls_port, http->query, uid);
+ 
+diff --git a/cloudapd/cloudiface/json.c b/cloudapd/cloudiface/json.c
+index 95d7361..a8e4a10 100644
+--- a/cloudapd/cloudiface/json.c
++++ b/cloudapd/cloudiface/json.c
+@@ -248,7 +248,7 @@ static void json_get_authorized_mesh_macs(json_object *val_obj, struct dev_cfg *
+ 			for (indx = 0; indx < mac_count; indx++) {
+ 				array_obj = json_object_array_get_idx(array, indx);
+ 				mac_str = json_object_get_string(array_obj);
+-				if (strlen(mac_str)) {
++				if (*mac_str) {
+ 					valid_macs++;
+ 					strncpy(mesh_macs[indx].mac, mac_str,
+ 						sizeof(mesh_macs[indx].mac));
+@@ -2086,7 +2086,7 @@ static void json_vap_update(json_object *jobj, struct vap_node_info *vap, char *
+ 
+ 	json_object_object_add(jobj, VAP_ID,
+ 			       json_object_new_int(vap->vap_id));
+-	if (strlen(uid_name))
++	if (*uid_name)
+ 		json_object_object_add(jobj, VAP_MAC,
+ 				       json_object_new_string(uid_name));
+ 	else
+@@ -2122,12 +2122,12 @@ static void json_sta_update(json_object *jarray, struct station_info *peer, int
+ 	json_object_object_add(jobj, STA_MAC,
+ 			       json_object_new_string(peer->mac_address));
+ 
+-	if (strlen(peer->ip_addr) > 0) {
++	if (*peer->ip_addr) {
+ 		json_object_object_add(jobj, UPDT_IP,
+ 				       json_object_new_string(peer->ip_addr));
+ 	}
+ 
+-	if (strlen(peer->hostname) > 0) {
++	if (*peer->hostname) {
+ 		json_object_object_add(jobj, UPDT_HOST,
+ 				       json_object_new_string(peer->hostname));
+ 	}
+@@ -3120,7 +3120,7 @@ const char *json_prepare_peer_uid_list(json_object *jobj, struct dl_list *peer_u
+ 			if (uid_curr->uid_alive_flag) {
+ 				json_object_array_add(juid_list,
+ 						      json_object_new_string(uid_curr->uid));
+-				if (strlen(uid_curr->uid_name))
++				if (*uid_curr->uid_name)
+ 					json_object_array_add(juid_name_list,
+ 							      json_object_new_string
+ 							      (uid_curr->uid_name));
+@@ -3240,7 +3240,7 @@ static void capd_find_name(struct capd *capd, char *uid, int rtype, char *name)
+ 
+ 	dl_list_for_each_safe(uid_info, tmp, &capd->peer_uid_list,
+ 			      struct capd_uid_info, list) {
+-		if (!strcmp(uid, uid_info->uid) && strlen(uid_info->uid_name)) {
++		if (!strcmp(uid, uid_info->uid) && *uid_info->uid_name) {
+ 			if (rtype == RADIO_OPER_24GHZ)
+ 				sprintf(name, "%s_2G", uid_info->uid_name);
+ 			else if (rtype == RADIO_OPER_5GHZ)
+@@ -3280,10 +3280,10 @@ void json_construct_all_mesh_peer_sta_list(json_object *total_jobj, struct capd
+ 			mac_ntoa(sta_list->mac_address, sta_mac);
+ 			json_object_object_add(jobj, STA_MAC, json_object_new_string(sta_mac));
+ 			mac_ntoa(peer->bssid, vap_mac);
+-			if (strlen(sta_list->hostname) > 0)
++			if (*sta_list->hostname)
+ 				json_object_object_add(jobj, UPDT_HOST,
+ 						       json_object_new_string(sta_list->hostname));
+-			if (strlen(name) > 0)
++			if (*name)
+ 				json_object_object_add(jobj, VAP_MAC,
+ 						       json_object_new_string(name));
+ 			else
+@@ -3365,7 +3365,7 @@ json_object *json_send_steer_report(struct capd *capd, struct dl_list *sta_list)
+ 				json_object_object_add(new_bss, BSSID,
+ 						       json_object_new_string(bssid));
+ 				capd_find_vap_name(capd, bss->bssid, name);
+-				if (strlen(name) > 0)
++				if (*name)
+ 					json_object_object_add(new_bss, BSSID_NAME,
+ 							       json_object_new_string(name));
+ 				json_object_object_add(new_bss, BSS_STEER_ATTEMPTS,
+@@ -3407,7 +3407,7 @@ json_object *json_send_steer_report(struct capd *capd, struct dl_list *sta_list)
+ 				json_object_object_add(new_conn, BSSID,
+ 						       json_object_new_string(mac_address));
+ 				capd_find_vap_name(capd, conn->mac_address, name);
+-				if (strlen(name) > 0)
++				if (*name)
+ 					json_object_object_add(new_conn, BSSID_NAME,
+ 							       json_object_new_string(name));
+ 				json_object_object_add(new_conn, STA_CTIME,
+diff --git a/cloudapd/cloudiface/mqtt.c b/cloudapd/cloudiface/mqtt.c
+index 112f1bc..a89b9ae 100644
+--- a/cloudapd/cloudiface/mqtt.c
++++ b/cloudapd/cloudiface/mqtt.c
+@@ -209,7 +209,7 @@ int mqtt_connect(struct mqtt *mqtt,
+ 	port = mqtt->port;
+ 
+ 	/* mqtt security init */
+-	if (strlen(mqtt->ca_cert) && mqtt->tls_port) {
++	if (*mqtt->ca_cert && mqtt->tls_port) {
+ 		ret = mosquitto_tls_set(mq, mqtt->ca_cert, NULL, NULL,
+ 					NULL, NULL);
+ 		if (ret) {
+diff --git a/cloudapd/cloudiface/socket.c b/cloudapd/cloudiface/socket.c
+index 487f376..c469a26 100644
+--- a/cloudapd/cloudiface/socket.c
++++ b/cloudapd/cloudiface/socket.c
+@@ -73,7 +73,7 @@ void socket_deinit(struct socket_conn *soc)
+ 
+ int socket_init(struct socket_conn *soc)
+ {
+-	if (!strlen(soc->server_addr)) {
++	if (!*soc->server_addr) {
+ 		cap_printf(MSG_ERROR,
+ 			   "Socket init failed, server address is missing");
+ 		return -1;
+diff --git a/cloudapd/utils.c b/cloudapd/utils.c
+index a1e6a01..57e5321 100644
+--- a/cloudapd/utils.c
++++ b/cloudapd/utils.c
+@@ -555,7 +555,7 @@ static int lan_set_static_ipv4(struct uci_context *ctx, char *iface_name,
+ 		ret = uci_cmd_option(ctx, CFG_NETWORK, iface_name, CFG_NETMASK, mask, UCI_UPDATE);
+ 		if (!ret)
+ 			*update	= 1;
+-		if (strlen(gateway)) {
++		if (*gateway) {
+ 			ret = uci_cmd_option(ctx, CFG_NETWORK, iface_name, CFG_GATEWAY,
+ 					     gateway, UCI_UPDATE);
+ 			if (!ret)
+@@ -573,13 +573,13 @@ static int lan_set_static_ipv4(struct uci_context *ctx, char *iface_name,
+ 					   NULL, UCI_DEL);
+ 			if (!ret)
+ 				*update	= 1;
+-			if (strlen(dns)) {
++			if (*dns) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns, UCI_ADD);
+ 				if (!ret)
+ 					*update	= 1;
+ 			}
+-			if (strlen(dns1)) {
++			if (*dns1) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns1, UCI_ADD);
+ 				if (!ret)
+@@ -599,7 +599,7 @@ static int lan_set_static_ipv4(struct uci_context *ctx, char *iface_name,
+ 				     mask, UCI_ADD);
+ 		if (ret < 0)
+ 			goto exit;
+-		if (strlen(gateway)) {
++		if (*gateway) {
+ 			ret = uci_cmd_option(ctx, CFG_NETWORK, iface_name, CFG_GATEWAY,
+ 					     gateway, UCI_ADD);
+ 			if (ret < 0)
+@@ -612,13 +612,13 @@ static int lan_set_static_ipv4(struct uci_context *ctx, char *iface_name,
+ 					   NULL, UCI_DEL);
+ 			if (ret < 0)
+ 				goto exit;
+-			if (strlen(dns)) {
++			if (*dns) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns, UCI_ADD);
+ 				if (ret < 0)
+ 					goto exit;
+ 			}
+-			if (strlen(dns1)) {
++			if (*dns1) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns1, UCI_ADD);
+ 				if (ret < 0)
+@@ -665,13 +665,13 @@ static int lan_set_dynamic_ipv4(struct uci_context *ctx, char *iface_name, char
+ 					   NULL, UCI_DEL);
+ 			if (ret < 0)
+ 				goto exit;
+-			if (strlen(dns)) {
++			if (*dns) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns, UCI_ADD);
+ 				if (ret < 0)
+ 					goto exit;
+ 			}
+-			if (strlen(dns1)) {
++			if (*dns1) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns1, UCI_ADD);
+ 				if (ret < 0)
+@@ -687,13 +687,13 @@ static int lan_set_dynamic_ipv4(struct uci_context *ctx, char *iface_name, char
+ 					   NULL, UCI_DEL);
+ 				if (!ret)
+ 					*update	= 1;
+-			if (strlen(dns)) {
++			if (*dns) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns, UCI_ADD);
+ 				if (!ret)
+ 					*update	= 1;
+ 			}
+-			if (strlen(dns1)) {
++			if (*dns1) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns1, UCI_ADD);
+ 				if (!ret)
+@@ -804,13 +804,13 @@ static int wan_set_static_ipv4(struct uci_context *ctx, char *iface_name,
+ 					   NULL, UCI_DEL);
+ 			if (!ret)
+ 				*update	= 1;
+-			if (strlen(dns)) {
++			if (*dns) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns, UCI_ADD);
+ 				if (!ret)
+ 					*update	= 1;
+ 			}
+-			if (strlen(dns1)) {
++			if (*dns1) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns1, UCI_ADD);
+ 				if (!ret)
+@@ -838,13 +838,13 @@ static int wan_set_static_ipv4(struct uci_context *ctx, char *iface_name,
+ 					   NULL, UCI_DEL);
+ 			if (ret < 0)
+ 				goto exit;
+-			if (strlen(dns)) {
++			if (*dns) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns, UCI_ADD);
+ 				if (ret < 0)
+ 					goto exit;
+ 			}
+-			if (strlen(dns1)) {
++			if (*dns1) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns1, UCI_ADD);
+ 				if (ret < 0)
+@@ -892,13 +892,13 @@ static int wan_set_dynamic_ipv4(struct uci_context *ctx, char *iface_name, char
+ 					   NULL, UCI_DEL);
+ 			if (ret < 0)
+ 				goto exit;
+-			if (strlen(dns)) {
++			if (*dns) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns, UCI_ADD);
+ 				if (ret < 0)
+ 					goto exit;
+ 			}
+-			if (strlen(dns1)) {
++			if (*dns1) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns1, UCI_ADD);
+ 				if (ret < 0)
+@@ -914,13 +914,13 @@ static int wan_set_dynamic_ipv4(struct uci_context *ctx, char *iface_name, char
+ 					   NULL, UCI_DEL);
+ 			if (!ret)
+ 				*update	= 1;
+-			if (strlen(dns)) {
++			if (*dns) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns, UCI_ADD);
+ 				if (!ret)
+ 					*update	= 1;
+ 			}
+-			if (strlen(dns1)) {
++			if (*dns1) {
+ 				ret = uci_cmd_list(ctx, CFG_NETWORK, iface_name, CFG_DNS,
+ 						   dns1, UCI_ADD);
+ 				if (!ret)
+@@ -949,7 +949,7 @@ int wan_ipv4_addr_mask_set(char *iface_name, char *proto, char *ip_addr, char *m
+ 		return -1;
+ 	}
+ 
+-	if (!strlen(wan_ifname)) {
++	if (!*wan_ifname) {
+ 		snprintf(str, sizeof(str), "%s.%s.%s", CFG_NETWORK, CFG_WAN, CFG_IFACE);
+ 
+ 		if (uci_lookup_ptr(ctx, &config, str, true) == UCI_OK && config.s != NULL &&
+-- 
+2.7.4
+

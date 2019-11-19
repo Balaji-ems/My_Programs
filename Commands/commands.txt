@@ -1,0 +1,45 @@
+To know more visit : https://wireless.wiki.kernel.org/en/users/documentation/iw
+
+iw help:
+	list out the options.
+
+iw list:
+	get device capabilities for all devices.
+
+Scanning :
+	iw dev "ifname" scan
+	-> ifname - interface name such as wireless or wired.
+	-> ex wlan0, wlp3s0, enp0s25.
+
+Listenting to Events :
+	
+	*iw event
+	
+	When debugging, it can be useful to see the auth/assoc/deauth/disassoc frames, use
+	*iw event -f
+
+	 and sometimes timing information is also useful
+	* iw event -t
+
+Getting link status :
+
+	iw dev "ifname" link
+	-> To determine if you are connected to an AP or not
+
+Establishing connection :
+
+	* iw "ifname" connect "ssid"
+	
+	* iw "ifname" connect "ssid" "freq" (if you know the particular frequency)
+
+	* iw wlan0 connect foo keys 0:abcde d:1:0011223344 (To connect an AP using WEP)
+
+Getting station statistics :
+
+	*iw dev "ifname" station dump
+	-> to get the station information
+
+Getting station statistics against a peer :
+
+	* sudo iw dev "ifname" station <peer-MAC-address>
+	

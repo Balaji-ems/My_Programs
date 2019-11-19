@@ -1,0 +1,44 @@
+iperf test root : client, mesh :server
+
+root@Qubercomm:~# iperf3 -s 172.16.12.132
+-----------------------------------------------------------
+Server listening on 5201
+-----------------------------------------------------------
+Accepted connection from 172.16.12.1, port 40328
+[  5] local 172.16.12.132 port 5201 connected to 172.16.12.1 port 40330
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.01   sec  1.87 MBytes  15.6 Mbits/sec                  
+[  5]   1.01-2.00   sec  2.47 MBytes  20.8 Mbits/sec                  
+[  5]   2.00-3.01   sec  3.32 MBytes  27.7 Mbits/sec                  
+[  5]   3.01-4.00   sec  4.31 MBytes  36.3 Mbits/sec                  
+[  5]   4.00-5.01   sec  3.74 MBytes  31.2 Mbits/sec                  
+[  5]   5.01-6.01   sec  2.85 MBytes  23.9 Mbits/sec                  
+[  5]   6.01-7.00   sec  3.24 MBytes  27.2 Mbits/sec                  
+[  5]   7.00-8.00   sec  2.69 MBytes  22.5 Mbits/sec                  
+[  5]   8.00-9.00   sec  4.60 MBytes  38.6 Mbits/sec                  
+[  5]   9.00-10.00  sec  4.35 MBytes  36.5 Mbits/sec                  
+[  5]  10.00-10.09  sec   475 KBytes  44.4 Mbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-10.09  sec  33.9 MBytes  28.2 Mbits/sec                  receiver
+
+
+root@Qubercomm:~# iperf3 -c 172.16.12.1
+Connecting to host 172.16.12.1, port 5201
+[  5] local 172.16.12.132 port 35452 connected to 172.16.12.1 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.01   sec  2.96 MBytes  24.6 Mbits/sec    0    153 KBytes       
+[  5]   1.01-2.01   sec  3.54 MBytes  29.7 Mbits/sec    0    300 KBytes       
+[  5]   2.01-3.01   sec  3.17 MBytes  26.6 Mbits/sec    0    402 KBytes       
+[  5]   3.01-4.01   sec  3.85 MBytes  32.3 Mbits/sec    0    454 KBytes       
+[  5]   4.01-5.01   sec  3.11 MBytes  26.1 Mbits/sec    0    472 KBytes       
+[  5]   5.01-6.01   sec  3.04 MBytes  25.5 Mbits/sec    0    472 KBytes       
+[  5]   6.01-7.01   sec  3.29 MBytes  27.6 Mbits/sec    0    472 KBytes       
+[  5]   7.01-8.01   sec  4.29 MBytes  36.0 Mbits/sec    0    472 KBytes       
+[  5]   8.01-9.01   sec  2.80 MBytes  23.5 Mbits/sec    0    472 KBytes       
+[  5]   9.01-10.01  sec  3.67 MBytes  30.8 Mbits/sec    0    472 KBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.01  sec  33.7 MBytes  28.3 Mbits/sec    0             sender
+[  5]   0.00-10.05  sec  33.2 MBytes  27.7 Mbits/sec                  receiver
+

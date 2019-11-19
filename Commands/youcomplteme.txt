@@ -1,0 +1,49 @@
+Run this command in the terminal
+
+# for vim
+
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+#for nvim
+
+curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+
+Add this in the following file
+
+for nvim  ~/.config/nvim/init.vim
+
+" Plugins will be downloaded under the specified directory.
+call plug#begin('~/.vim/plugged')
+
+" Declare the list of plugins.
+Plug 'tpope/vim-sensible'
+Plug 'junegunn/seoul256.vim'
+Plug 'https://github.com/VundleVim/Vundle.vim.git'
+Plug 'https://github.com/ycm-core/YouCompleteMe.git'
+Plug 'junegunn/vim-easy-align'
+
+" List ends here. Plugins become visible to Vim after this call.
+call plug#end()
+
+
+
+
+Restart the vim and in vim command tpye
+
+:PlugInstall
+
+
+
+.vimrc file
+
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'junegunn/seoul256.vim'
+Plugin 'junegunn/goyo.vim'
+Plugin 'junegunn/limelight.vim'
+call vundle#end()
+filetype plugin indent on
+syntax enable
