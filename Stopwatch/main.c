@@ -1,0 +1,33 @@
+#include "core.h"
+
+int main(void)
+{
+	int hour = 0, minutes = 0, sec = 0;
+	time_t now;
+	struct tm *timeinfo;
+
+	time(&now);
+	timeinfo = localtime(&now);
+
+	hour = timeinfo->tm_hour;
+	minutes = timeinfo->tm_min;
+	sec = timeinfo->tm_sec;
+start:
+	for(hour; hour < 24; hour++) {
+		for(minutes; minutes < 60; minutes++) {
+			for(sec; sec < 60; sec++) {
+				printf("\b\b\b\b\b\b\b\b\b%02d:%02d:%02d", hour, minutes, sec);
+				fflush(stdout);
+				for (double i = 0; i < 89999900; i++) {
+					i++;
+					i--;
+				}
+			}
+			sec = 0;
+		}
+		minutes = 0;
+	}
+	if (hour == 24)
+		hour = 0;
+	goto start;
+}
