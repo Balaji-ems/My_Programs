@@ -16,7 +16,7 @@ enum Qualities {
 	MAX
 };
 
-char *Quality[] = {"Studies", "Disipline", "Sport", "Attendance",
+static char *Quality[] = {"Studies", "Disipline", "Sport", "Attendance",
 		   "Ragging", "Communication", "Respect_others"};
 
 #define check_bit(value, posistion) ((value) & 1 << (posistion))
