@@ -1,13 +1,14 @@
-From bba561a45298d268b692ce191a031ca26b81b92a Mon Sep 17 00:00:00 2001
+From 86e9f813ed1a2d5f94c5832ca9e360c646394344 Mon Sep 17 00:00:00 2001
 From: Balaji Eswaramurthy <balaji.eswaramurthy@qubercomm.com>
-Date: Tue, 19 Nov 2019 12:23:56 +0530
+Date: Tue, 19 Nov 2019 18:13:05 +0530
 Subject: [PATCH] Nmeshd: Memory leak fixes
 
+ Fixed memory leaks.
 ---
  cloudapd/capd_local.c            |  4 +++-
- cloudapd/cloudiface/cloudiface.c |  6 +++++-
+ cloudapd/cloudiface/cloudiface.c |  8 ++------
  cloudapd/cloudiface/json.c       | 18 +++++++++++-------
- 3 files changed, 19 insertions(+), 9 deletions(-)
+ 3 files changed, 16 insertions(+), 14 deletions(-)
 
 diff --git a/cloudapd/capd_local.c b/cloudapd/capd_local.c
 index 489b29b..0fb3cce 100644
@@ -26,20 +27,28 @@ index 489b29b..0fb3cce 100644
  	snprintf(mesh_topic, sizeof(mesh_topic), "prod/mesh/nmeshd/%s", uid);
  	if (reply_str)
 diff --git a/cloudapd/cloudiface/cloudiface.c b/cloudapd/cloudiface/cloudiface.c
-index 691947b..012b422 100644
+index 691947b..f5c72ab 100644
 --- a/cloudapd/cloudiface/cloudiface.c
 +++ b/cloudapd/cloudiface/cloudiface.c
-@@ -683,8 +683,12 @@ int cloud_mesh_send_sta_ip_resp_to_node(void *priv, struct dl_list *sta_ip_req_l
+@@ -647,12 +647,6 @@ int cloud_mesh_send_sta_ip_resp_to_node(void *priv, struct dl_list *sta_ip_req_l
+ 	if (!obj)
+ 		return -1;
  
- 	jobj = json_mesh_send_sta_ip_resp_to_node(obj);
+-	ip_obj = json_object_new_object();
+-	if (!ip_obj) {
+-		json_object_put(obj);
+-		return -1;
+-	}
+-
+ 	strncpy(mesh_uid, uid, UID_LEN);
+ 
+ 	if (cfg == CFG_TYPE_CLOUD) {
+@@ -685,6 +679,8 @@ int cloud_mesh_send_sta_ip_resp_to_node(void *priv, struct dl_list *sta_ip_req_l
  	str = json_object_to_json_string(jobj);
--	if (str)
-+	if (str) {
+ 	if (str)
  		ret = mqtt_publish(mqtt, ucast_msg_topic, str, strlen(str));
-+	} else {
++	else
 +		json_object_put(obj);
-+		json_object_put(ip_obj);
-+	}
  
  	json_object_put(jobj);
  
