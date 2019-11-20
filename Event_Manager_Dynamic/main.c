@@ -22,7 +22,7 @@ int main(void)
 		case 1: 
 			printf("Enter the no of modules to create : ");
 			scanf("%d", &size);
-			for ( ; index < size; index++) {
+			for (index = 0; index < size; index++) {
 A:				
 				printf("Enter the Module Name :");
 				scanf("%s", name);
@@ -35,7 +35,6 @@ A:
 
 				create(name, callback);
 			}
-			index = 0;
 			i = 1;
 			break;
 
@@ -106,7 +105,7 @@ B:
 			exit(0);
 
 		default:
-			printf("Enter a valid option\n");		
+			printf("Enter a valid option\n");
 		}
 		printf("\n");
 	}

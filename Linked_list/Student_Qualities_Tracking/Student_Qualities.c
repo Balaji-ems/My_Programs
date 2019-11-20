@@ -1,7 +1,5 @@
 #include "functions.h"
-/*
- * structure to store the name , rollno , qualities of a student
- */
+/* structure to store the name, rollno, qualities */
 
 struct node {
 	char   name[20];
@@ -10,9 +8,7 @@ struct node {
 	struct node *next;
 } *head = NULL;
 
-/*
- * user choice of operation
- */
+/* user choice of operation */
 
 int main(void)
 {
@@ -21,9 +17,10 @@ int main(void)
 	printf("\t\t Student Quality Tracking\n");
 	while (1) {
 		printf("Choose any of the operations given below\n");
-		printf("1.Insert  Student data\n2.Display Student data\n"
-			"3.Delete  Student data\n4.Update  Student data\n"
-			"5.Display student database\n6.Exit\n");
+		printf("1.Insert  Student Data\n2.Display Student Data\n"
+			"3.Delete  Student Data\n4.Update  Student Data\n"
+			"5.Display Student Database\n"
+			"6.Change  Student Roll Number\n7.Exit\n");
 
 		scanf("%d", &choice);
 
@@ -46,7 +43,8 @@ int main(void)
 			Displayall();
 			break;
 		case 6:
-			if (head != NULL)
+			break;
+		case 7:
 				free(head);
 			exit(0);
 		default:
@@ -56,9 +54,7 @@ int main(void)
 	}
 }
 
-/*
- * function to insert details of the student
- */
+/* function to insert details of the student */
 
 void insert(void)
 {
@@ -80,19 +76,19 @@ A:
 	temp->quality = 0;
 	temp->next = NULL;
 
-	if (head == NULL)
+	if (head == NULL) {
 		head = temp;
-	else {
-		while (temp1->next != NULL)
-			temp1 = temp1->next;
-		temp1->next = temp;
+		goto B;
 	}
+
+	while (temp1->next != NULL)
+		temp1 = temp1->next;
+	temp1->next = temp;
+B:
 	sort();
 }
 
-/*
- * display the details of the students
- */
+/* Display the details of a student from the database */
 
 void display(void)
 {
@@ -137,9 +133,7 @@ void display(void)
 	}
 }
 
-/*
- * Update the details of the student
- */
+/* Update the details of the student */
 
 void update(void)
 {

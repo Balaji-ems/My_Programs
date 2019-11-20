@@ -29,10 +29,14 @@ struct event {
 void createnode(char *name, void(*ptr)(char *)) 
 {
 	int temp_interest;
-	struct node* temp1;
+	struct node *temp1;
 
-	struct node* temp = malloc(sizeof(struct node));
-	
+	struct node *temp = malloc(sizeof(struct node));
+	if (!temp) {
+		printf("Dynamic memory alloc failed");
+		return;
+	}
+
 	strcpy(temp->module_name,name);
 	temp->interest = 0;
 	temp->ptr = ptr;
@@ -68,7 +72,7 @@ void subscribeEvent(char *name, int data)
 
 void publishEvent(int event)
 {
-	struct node* temp = head;
+	struct node *temp = head;
 
 	while(temp != NULL) {
 		if(check_bit(temp->interest,event-1)) {
@@ -107,6 +111,10 @@ void createEvent(char *event_name)
 	struct event *temp, *temp1;
 
 	temp = (struct event *)malloc(sizeof(struct event));
+	if (!temp) {
+		printf("Dynamic memory alloc failed\n");
+		return;
+	}
 
 	strcpy(temp->event_name, event_name);
 	temp->next = NULL;
