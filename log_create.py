@@ -5,9 +5,10 @@ import os
 def log_creator():
 
     SSH_IP = '192.168.40.252'
+    SSH_PASS = 'Qube!123'
 
     MEM_LIMIT = -1
-    SSH_TEXT = "SSHPASS='Qube!123' sshpass -e ssh root@"
+    SSH_TEXT = "SSHPASS=" + SSH_PASS + " sshpass -e ssh root@"
     LINE_BREAK = "'\n----------------------------------------------------------------\n'"
 
     FILE_NAME = time.strftime("%d-%m-%Y-%H:%M.txt")
