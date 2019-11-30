@@ -1,10 +1,10 @@
 #include "core.h"
-
 int main(void)
 {
 	int hour = 0, minutes = 0, sec = 0;
 	time_t now;
 	struct tm *timeinfo;
+	char a;
 
 	time(&now);
 	timeinfo = localtime(&now);
@@ -18,10 +18,11 @@ start:
 			for(sec; sec < 60; sec++) {
 				printf("\b\b\b\b\b\b\b\b\b%02d:%02d:%02d", hour, minutes, sec);
 				fflush(stdout);
-				for (double i = 0; i < 89999900; i++) {
-					i++;
-					i--;
+				if (scanf("%c", &a) == 1) {
+					printf("\nSuccess\n");
+					// malloc
 				}
+				sleep(1);
 			}
 			sec = 0;
 		}

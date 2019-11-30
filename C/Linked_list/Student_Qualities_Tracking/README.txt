@@ -1,4 +1,4 @@
-To compile and run the program type the following commands in the terminal.4
+To compile and run the program type the following commands in the terminal
 
 make
 
