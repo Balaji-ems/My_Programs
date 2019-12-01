@@ -1,0 +1,10 @@
+				Queue ADT
+
+	A Queue is a linear data structure which follows First In First Out (FIFO)
+principle, in which insertion is performed at rear and deletion is performed at
+the front end.
+
+Operations in Queue
+	1.Enqueue - Inserts an element
+	2.Dequeue - Delete an element
+
