@@ -1,15 +1,4 @@
-OBJECTS = all_module.o event_manager.o main.o
-
-CC = gcc
-
-CFLAGS = -I.
-
-DEPS = event.h events.h global.h module.h
-
-%.o : %.c %(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
-
-Event_Manager : $(OBJECTS)
-	$(CC) -o $A $^ $(CFLAGS);
+all:
+	gcc -o out event_manager.c all_module.c main.c
 clean:
-	rm Event_Manager *.o
+	rm out
