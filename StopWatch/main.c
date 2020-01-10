@@ -7,14 +7,11 @@ int main(void)
 	char c;
 	pthread_t t1;
 
-reset:
-	hour = MIN;
-	min = MIN;
-	sec = MIN;
-
 	printf("Press the following to select an operation\n");
 	printf("S -> Start the stopwatch\nP -> Pause the stopwatch\n"
 	       "R -> Reset the stopwatch\nE -> Exit\n");
+reset:
+	hour = min = sec = 0;
 
 	time_print(&hour, &min, &sec);
 	
@@ -32,13 +29,14 @@ start:
 						time_print(&hour, &min, &sec);
 						if (action_for_key()) {
 							c = getchar();
-							if (c == 'r' || c == 'R')
+							if (c == 'r' || c == 'R') {
 								goto reset;
-							else if (c == 'e' || c == 'E')
+							} else if (c == 'e' || c == 'E') {
+								printf("\n");
 								exit(0);
-							else if (c == 's' || c == 'S')
+							} else if (c == 's' || c == 'S') {
 								goto start;
-							else if (c == 'p' || c == 'P') {
+							} else if (c == 'p' || c == 'P') {
 								printf("\b");
 								pthread_create(&t1, NULL, &wait, NULL);
 								pthread_join(t1, NULL);

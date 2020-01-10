@@ -38,6 +38,7 @@ void time_print(int *hour, int *min, int *sec)
 		printf("\r\r\r\r\r");
 	// Display the time
 	printf("%02d:%02d:%02d", *hour, *min, *sec);
+	printf("\r");
 }
 
 // Pause the stopwatch

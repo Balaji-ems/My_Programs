@@ -1,10 +1,12 @@
 #include "core.h"
+
 int main(void)
 {
 	int hour = 0, minutes = 0, sec = 0;
 	time_t now;
 	struct tm *timeinfo;
 	char a;
+	struct lap_time *ptr;
 
 	time(&now);
 	timeinfo = localtime(&now);
@@ -20,7 +22,8 @@ start:
 				fflush(stdout);
 				if (scanf("%c", &a) == 1) {
 					printf("\nSuccess\n");
-					// malloc
+					
+					ptr = (struct lap_time *)malloc(sizeof(struct lap_time));
 				}
 				sleep(1);
 			}

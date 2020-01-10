@@ -14,4 +14,6 @@ struct lap_time {
 	struct lap_time *next_node;
 };
 
+struct lap_time head;
+
 #endif
