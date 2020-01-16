@@ -1,9 +1,0 @@
-Mon Nov 11 09:54:03 2019 daemon.info nmeshd[1260]: Nmeshd: MTRACKER: mem leak: capd_mesh.c, line 282, capd_mesh_peer_load_update(), occurences: 2)
-Mon Nov 11 09:54:03 2019 daemon.info nmeshd[1260]: Nmeshd: MTRACKER: mem leak: capd_main.c, line 44, capd_memory_alloc_request())
-Mon Nov 11 09:54:03 2019 daemon.info nmeshd[1260]: Nmeshd: MTRACKER: mem leak: capd_station.c, line 186, capd_allocate_sta_node(), occurences: 4)
-Mon Nov 11 09:54:03 2019 daemon.info nmeshd[1260]: Nmeshd: MTRACKER: mem leak: capd_dmesh_11s.c, line 403, neighbour_node_iface_init_11s(), occurences: 4)
-Mon Nov 11 09:54:03 2019 daemon.info nmeshd[1260]: Nmeshd: MTRACKER: mem leak: 6552 bytes in total
-Mon Nov 11 09:54:03 2019 daemon.info nmeshd[1260]: Nmeshd: MTRACKER: obj leak: cloudiface/cloudiface.c, line 650, cloud_mesh_send_sta_ip_resp_to_node(), occurences: 64)
-Mon Nov 11 09:54:03 2019 daemon.info nmeshd[1260]: Nmeshd: MTRACKER: obj leak: cloudiface/json.c, line 3004, json_construct_radio_config(), occurences: 6)
-Mon Nov 11 09:54:03 2019 daemon.info nmeshd[1260]: Nmeshd: MTRACKER: obj leak: cloudiface/json.c, line 3795, json_handle_peer_sta_list_req(), occurences: 3)
-Mon Nov 11 09:54:03 2019 daemon.info nmeshd[1260]: Nmeshd: MTRACKER: obj leak: capd_local.c, line 927, capd_process_peer_sta_request(), occurences: 3)
