@@ -9,7 +9,8 @@
 
 #define PORT 8080 
 
-int main() { 
+int main(void)
+{
 	int sockfd,n,len;
 	char buffer[1024]; 
 	char msg[20];
@@ -37,4 +38,4 @@ int main() {
 	}
 	close(sockfd); 
 	return 0; 
-} 
+}

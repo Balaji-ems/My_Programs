@@ -7,24 +7,25 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
-#define PORT  8080
+#define PORT       8080
+#define MAX_BUFFER 1024
 
 int main(void)
 {
-	int sockfd;
-	char buffer[1024];
+	int sockfd, len, n;
+	char buffer[MAX_BUFFER];
 	struct sockaddr_in servaddr, cliaddr;
-	int len, n;
 
 	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sockfd < 0)
-		printf("\nSocket creation failed");
+		printf("Socket creation failed");
 	else
 		printf("Socket created successfully");
 
 	memset(&servaddr, 0, sizeof(servaddr));
 	memset(&cliaddr, 0, sizeof(cliaddr));
-	servaddr.sin_family    = AF_INET;
+
+	servaddr.sin_family = AF_INET;
 	servaddr.sin_addr.s_addr = INADDR_ANY;
 	servaddr.sin_port = htons(PORT);
 
@@ -42,6 +43,8 @@ int main(void)
 		if (!strcmp(buffer, "end"))
 			break;
 	}
+
+	close(sockfd);
 
 	return 0;
 }
