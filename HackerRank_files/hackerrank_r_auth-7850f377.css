@@ -1,6 +1,0 @@
-.auth-box-container .contest-title{box-sizing:border-box;margin-bottom:20px;width:480px;font-size:26px;line-height:1.4}@media screen and (max-width:767px){.auth-box-container .contest-title{width:100%;font-size:22px}}
-.auth-container{text-align:center}.auth-container .logo-img{margin-top:60px;margin-bottom:20px;height:30px}.auth-container .auth-content-wrap{display:inline-block}@media screen and (max-width:767px){.auth-container .logo-img{height:24px}.auth-container .auth-content-wrap{display:block}}
-.auth-message{text-align:center;line-height:1.4}.auth-message-icon{margin-bottom:20px;color:#1ba94c;font-size:50px}.auth-message-title{font-weight:700;font-size:26px}.auth-message-content{margin:20px;font-size:14px}@media screen and (max-width:767px){.auth-message-icon{font-size:40px}.auth-message-title{font-size:22px}}
-.google-recaptcha{text-align:left}.google-recaptcha .recaptcha-container.loading{display:none}
-
-/*# sourceMappingURL=https://preview-hrc.hackerrank.com/fcore-assets/sourcemaps/hackerrank_r_auth-7850f377.css.map*/

@@ -20,10 +20,8 @@ run checkpatch
 
 git push origin (new branch name)
 
-
 Checkpatch :
 	~/qbc_lede/build_dir/target-arm_cortex-a15+neon-vfpv4_musl_eabi/linux-ipq806x/linux-4.9.77/scripts/checkpatch.pl -q --no-tree --no-signoff --max-line-length=100 --strict --show-types --showfile --ignore PREFER_KERNEL_TYPES,COMPARISON_TO_NULL,NEW_TYPEDEFS,FILE_PATH_CHANGES  (0001-Nmesh-Bug-fix.patch) patch-name
-
 
 scp /home/suku/dev/nmesh/ws/mbh0411/qbc_lede/bin/targets/ipq806x/generic/r5997-5387e62-ipq806x-asus_rt-ac58u-squashfs-sysupgrade.bin balaji@192.168.40.101:/tmp/
 
