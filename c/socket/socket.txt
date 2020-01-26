@@ -1,0 +1,52 @@
+What Is a Socket?
+
+	A socket is a communication mechanism that allows client/server systems to be developed either locally,
+on a single machine, or across networks. Linux functions such as printing, connecting to databases, and
+serving web pages as well as network utilities such as rlogin for remote login and ftp for file transfer
+usually use sockets to communicate.
+
+	Sockets are created and used differently from pipes because they make a clear distinction between client
+and server. The socket mechanism can implement multiple clients attached to a single server.
+
+Socket Connections
+	You can think of socket connections as telephone calls into a busy building. A call comes into an organization
+and is answered by a receptionist who puts the call through to the correct department (the server process)
+and from there to the right person (the server socket). Each incoming call (client) is routed to an
+appropriate end point and the intervening operators are free to deal with further calls. Before you look at
+the way socket connections are established in Linux systems, you need to understand how they operate
+for socket applications that maintain a connection.
+
+	First, a server application creates a socket, which like a file descriptor is a resource assigned to the server
+process and that process alone. The server creates it using the system call socket, and it can’t be shared
+with other processes.
+
+	Next, the server process gives the socket a name. Local sockets are given a filename in the Linux file system,
+often to be found in /tmp or /usr/tmp. For network sockets, the filename will be a service identifier
+(port number/access point) relevant to the particular network to which the clients can connect. This
+identifier allows Linux to route incoming connections specifying a particular port number to the correct server process.
+For example, a web server typically creates a socket on port 80, an identifier reserved for the purpose. Web browsers know
+to use port 80 for their HTTP connections to web sites the user wants to read. A socket is named using the system call bind.
+The server process then waits for a client to connect to the named socket. The system call, listen, creates a queue for
+incoming connections. The server can accept them using the system call accept. When the server calls accept, a new socket
+is created that is distinct from the named socket. This new socket is used solely for communication with this particular
+client. The named socket remains for further connections from other clients. If the server is written appropriately,
+it can take advantage of multiple connections. A web server will do this so that it can serve pages to many clients at once.
+For a simple server, further clients wait on the listen queue until the server is ready again.
+
+	The client side of a socket-based system is more straightforward. The client creates an unnamed socket
+by calling socket. It then calls connect to establish a connection with the server by using the server’s named socket as an address.
+Once established, sockets can be used like low-level file descriptors, providing two-way data communications.
+
+Client example program is in example_1.c.
+
+	This program fails when you run it because you haven’t yet created the server-side named socket. (The
+exact error message may differ from system to system.)
+
+A simple load server program is in example_2.c
+
+How It Works
+
+	The server program in this example can serve only one client at a time. It just reads a character from the
+client, increments it, and writes it back. In more sophisticated systems, where the server has to perform
+more work on the client’s behalf, this wouldn’t be acceptable, because other clients would be unable to
+connect until the server had finished. You’ll see a couple of ways to allow multiple connections later.
