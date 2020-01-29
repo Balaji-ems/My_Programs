@@ -1,0 +1,38 @@
+Socket Addresses
+
+	Each socket domain requires its own address format. For an AF_UNIX socket, the address is described by
+a structure, sockaddr_un, defined in the sys/un.h include file.
+
+struct sockaddr_un {
+	sa_family_t sun_family;	/* AF_UNIX */
+	char sun_path[];	/* pathname */
+};
+
+	So that addresses of different types may be passed to the socket-handling system calls, each address format
+is described by a similar structure that begins with a field (in this case, sun_family) that specifies the address
+type (the socket domain). In the AF_UNIX domain, the address is specified by a filename in the sun_path field of the
+structure.
+
+	On current Linux systems, the type sa_family_t, defined by X/Open as being declared in sys/un.h, is taken to
+be a short. Also, the pathname specified in sun_path is limited in size (Linux specifies 108 characters; others may
+use a manifest constant such as UNIX_MAX_PATH). Because address structures may vary in size, many socket calls require
+or provide as an output a length to be used for copying the particular address structure.
+
+	In the AF_INET domain, the address is specified using a structure called sockaddr_in, defined in
+netinet/in.h, which contains at least these members:
+
+struct sockaddr_in {
+	short int sin_family;		/* AF_INET */
+	unsigned short int sin_port;	/* Port number */
+	struct in_addr sin_addr;	/* Internet address */
+};
+
+The IP address structure, in_addr, is defined as follows:
+
+struct in_addr {
+	unsigned long int s_addr;
+};
+
+	The four bytes of an IP address constitute a single 32-bit value. An AF_INET socket is fully described
+by its domain, IP address, and port number. From an application’s point of view, all sockets act like file
+descriptors and are addressed by a unique integer value.

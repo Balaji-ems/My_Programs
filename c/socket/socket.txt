@@ -50,3 +50,52 @@ How It Works
 client, increments it, and writes it back. In more sophisticated systems, where the server has to perform
 more work on the client’s behalf, this wouldn’t be acceptable, because other clients would be unable to
 connect until the server had finished. You’ll see a couple of ways to allow multiple connections later.
+
+	When you run the server program, it creates a socket and waits for connections. If you start it in the
+background so that it runs independently, you can then start clients in the foreground.
+
+$ ./server1 &
+server waiting
+
+	As it waits for connections, the server prints a message. In the preceding example, the server waits for a
+file system socket and you can see it with the normal ls command. Remember that it’s good practice to remove a socket
+when you’ve finished with it, even if the program terminates abnormally via a signal. This keeps the file system from
+getting cluttered with unused files.
+
+$ ls -lF server_socket
+srwxr-xr-x 1 neil users 0 2007-06-23 11:41 server_socket=
+
+	The device type is “socket,” shown by the s at the front of the permissions and the = at the end of the
+name. The socket has been created just as an ordinary file would be, with permissions modified by the current umask.
+If you use the ps command, you can see the server running in the background. It’s shown sleeping (STAT is S) and is
+therefore not consuming CPU resources.
+
+$ ps lx
+F UID PID PPID PRI NI VSZ RSS WCHAN STAT TTY TIME COMMAND
+0 1000 23385 10689 17 0 1424 312 361800 S pts/1 0:00 ./server1
+
+	Now, when you run the client program, you are successful in connecting to the server. Because the
+server socket exists, you can connect to it and communicate with the server.
+
+$ ./client1
+server waiting
+char from server = B
+
+	The output from the server and the client get mixed on the terminal, but you can see that the server has
+received a character from the client, incremented it, and returned it. The server then continues and waits for the next
+client. If you run several clients together, they will be served in sequence, although the output you see may be more mixed up.
+
+$ ./client1 & ./client1 & ./client1 &
+[2] 23412
+[3] 23413
+[4] 23414
+server waiting
+char from server = B
+server waiting
+char from server = B
+server waiting
+char from server = B
+server waiting
+[2] Done client1
+[3]- Done client1
+[4]+ Done client1

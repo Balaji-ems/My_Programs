@@ -1,0 +1,95 @@
+Socket Attributes
+
+	To fully understand the system calls used in this example, you need to learn a little about UNIX
+networking. Sockets are characterized by three attributes: domain, type, and protocol. They also have an address
+used as their name. The formats of the addresses vary depending on the domain, also known as the protocol
+family. Each protocol family can use one or more address families to define the address format.
+
+Socket Domains
+
+	Domains specify the network medium that the socket communication will use. The most common socket
+domain is AF_INET, which refers to Internet networking that’s used on many Linux local area networks
+and, of course, the Internet itself. The underlying protocol, Internet Protocol (IP), which only has one address
+family, imposes a particular way of specifying computers on a network. This is called the IP address.
+
+	The “next generation” Internet Protocol, IPv6, has been designed to overcome some of the problems
+with the standard IP, notably the limited number of addresses that are available. IPv6 uses a different
+socket domain, AF_INET6, and a different address format. It is expected to eventually replace IP, but
+this process will take many years. Although there are implementations of IPv6 for Linux.
+
+	Although names almost always refer to networked machines on the Internet, these are translated into
+lower-level IP addresses. An example IP address is 192.168.1.99. All IP addresses are represented by four
+numbers, each less than 256, a so-called dotted quad. When a client connects across a network via sockets,
+it needs the IP address of the server computer.
+
+	There may be several services available at the server computer. A client can address a particular
+service on a networked machine by using an IP port. A port is identified within the system by assigning a
+unique 16-bit integer and externally by the combination of IP address and port number. The sockets are
+communication end points that must be bound to ports before communication is possible.
+
+	Servers wait for connections on particular ports. Well-known services have allocated port numbers
+that are used by all Linux and UNIX machines. These are usually, but not always, numbers less than 1024.
+Examples are the printer spooler (515), rlogin (513), ftp (21), and httpd (80). The last of these is the
+standard port for web servers. Usually, port numbers less than 1024 are reserved for system services and
+may only be served by processes with superuser privileges. X/Open defines a constant in netdb.h,
+IPPORT_RESERVED, to stand for the highest reserved port number.
+
+	Because there is a standard set of port numbers for standard services, computers can easily connect
+to each other without having to figure out the correct port. Local services may use nonstandard port addresses.
+The domain in the first example is the UNIX file system domain, AF_UNIX, which can be used by sockets based on
+a single computer that perhaps isn’t networked. When this is so, the underlying protocol is file input/output
+and the addresses are filenames. The address that you used for the server socket was server_socket, which you
+saw appear in the current directory when you ran the server application.
+
+	Other domains that might be used include AF_ISO for networks based on ISO standard protocols and
+AF_XNS for the Xerox Network System. We won’t cover these here.
+
+Socket Types
+
+	A socket domain may have a number of different ways of communicating, each of which might have
+different characteristics. This isn’t an issue with AF_UNIX domain sockets, which provide a reliable twoway
+communication path. In networked domains, however, you need to be aware of the characteristics of the
+underlying network and how different communication mechanisms are affected by them.
+
+	Internet protocols provide two communication mechanisms with distinct levels of service: streams
+and datagrams.
+
+Stream Sockets
+
+	Stream sockets (in some ways similar to standard input/output streams) provide a connection that is a
+sequenced and reliable two-way byte stream. Thus, data sent is guaranteed not to be lost, duplicated, or
+reordered without an indication that an error has occurred. Large messages are fragmented, transmitted,
+and reassembled. This is similar to a file stream, which also accepts large amounts of data and splits it
+up for writing to the low-level disk in smaller blocks. Stream sockets have predictable behavior.
+
+	Stream sockets, specified by the type SOCK_STREAM, are implemented in the AF_INET domain by TCP/IP
+connections. They are also the usual type in the AF_UNIX domain. We concentrate on SOCK_STREAM sockets
+in this chapter because they are more commonly used in programming network applications.
+
+	TCP/IP stands for Transmission Control Protocol/Internet Protocol. IP is the low-level protocol
+for packets that provides routing through the network from one computer to another. TCP provides
+sequencing, flow control, and retransmission to ensure that large data transfers arrive with all of the
+data present and correct or with an appropriate error condition reported.
+
+Datagram Sockets
+
+	In contrast, a datagram socket, specified by the type SOCK_DGRAM, doesn’t establish and maintain a
+connection. There is also a limit on the size of a datagram that can be sent. It’s transmitted as a single
+network message that may get lost, duplicated, or arrive out of sequence — ahead of datagrams sent after it.
+
+	Datagram sockets are implemented in the AF_INET domain by UDP/IP connections and provide an
+unsequenced, unreliable service. (UDP stands for User Datagram Protocol.) However, they are relatively
+inexpensive in terms of resources, because network connections need not be maintained. They’re fast
+because there is no associated connection setup time.
+
+	Datagrams are useful for “single-shot” inquiries to information services, for providing regular status
+information, or for performing low-priority logging. They have the advantage that the death of a server
+doesn’t unduly inconvenience a client and would not require a client restart. Because datagram-based
+servers usually retain no connection information, they can be stopped and restarted without disturbing
+their clients.
+
+Socket Protocols
+
+	Where the underlying transport mechanism allows for more than one protocol to provide the requested
+socket type, you can select a specific protocol for a socket. In this chapter, we concentrate on UNIX network
+and file system sockets, which don’t require you to choose a protocol other than the default.

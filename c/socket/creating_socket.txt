@@ -1,0 +1,47 @@
+Creating a Socket
+
+	The socket system call creates a socket and returns a descriptor that can be used for accessing the socket.
+
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int socket(int domain, int type, int protocol);
+
+	The socket created is one end point of a communication channel. The domain parameter specifies the
+address family, the type parameter specifies the type of communication to be used with this socket, and
+protocol specifies the protocol to be employed.
+
+	Domain					Description
+
+AF_UNIX					UNIX internal (file system sockets)
+AF_INET					ARPA Internet protocols (UNIX network sockets)
+AF_ISO					ISO standard protocols
+AF_NS					Xerox Network System protocols
+AF_IPX					Novell IPX protocol
+AF_APPLETALK				Appletalk DDS
+
+	The most common socket domains are AF_UNIX, which is used for local sockets implemented via the
+UNIX and Linux file systems, and AF_INET, which is used for UNIX network sockets. The AF_INET
+sockets may be used by programs communicating across a TCP/IP network including the Internet. The
+Windows Winsock interface also provides access to this socket domain.
+
+	The socket parameter type specifies the communication characteristics to be used for the new socket.
+Possible values include SOCK_STREAM and SOCK_DGRAM.
+
+	SOCK_STREAM is a sequenced, reliable, connection-based two-way byte stream. For an AF_INET domain
+socket, this is provided by default by a TCP connection that is established between the two end points of
+the stream socket when it’s connected. Data may be passed in both directions along the socket connection.
+The TCP protocols include facilities to fragment and reassemble long messages and to retransmit
+any parts that may be lost in the network.
+
+	SOCK_DGRAM is a datagram service. You can use this socket to send messages of a fixed (usually small)
+maximum size, but there’s no guarantee that the message will be delivered or that messages won’t be reordered
+in the network. For AF_INET sockets, this type of communication is provided by UDP datagrams.
+
+	The protocol used for communication is usually determined by the socket type and domain. There is
+normally no choice. The protocol parameter is used where there is a choice. 0 selects the default protocol.
+
+	The socket system call returns a descriptor that is in many ways similar to a low-level file descriptor.
+When the socket has been connected to another end-point socket, you can use the read and write system calls
+with the descriptor to send and receive data on the socket. The close system call is used to
+end a socket connection.

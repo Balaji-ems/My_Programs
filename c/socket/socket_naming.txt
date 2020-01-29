@@ -1,0 +1,27 @@
+Naming a Socket
+
+	To make a socket (as created by a call to socket) available for use by other processes, a server program
+needs to give the socket a name. Thus, AF_UNIX sockets are associated with a file system pathname, as
+you saw in the server1 example. AF_INET sockets are associated with an IP port number.
+
+#include <sys/socket.h>
+int bind(int socket, const struct sockaddr *address, size_t address_len);
+
+	The bind system call assigns the address specified in the parameter, address, to the unnamed
+socket associated with the file descriptor socket. The length of the address structure is passed as
+address_len.
+
+	The length and format of the address depend on the address family. A particular address structure
+pointer will need to be cast to the generic address type (struct sockaddr *) in the call to bind.
+On successful completion, bind returns 0. If it fails, it returns -1 and sets errno to one of the following values:
+
+
+Error Values			Description
+
+EDADF				The file discriptor is invalid.
+ENOTSOCK			The file discriptor doesn't refer to a socket.
+EINVAL				The file discriptor refers to an already-named socket.
+EADDRNOTAVAIL			The address is unavailable.
+EADDRINUSE			The address has asocket bound to it already.
+EACCESS				Can't create the file system name due to pemissions.
+ENOTDIR, ENAMETOOLONG		Indicates a poor choice of filename.
