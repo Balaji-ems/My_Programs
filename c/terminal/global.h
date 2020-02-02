@@ -1,6 +1,9 @@
 #include <termios.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <signal.h>
+
+#include "print.h"
 
 /* reads from keypress, doesn't echo */
 int getch(void)
@@ -29,3 +32,15 @@ int getche(void)
     tcsetattr( STDIN_FILENO, TCSANOW, &oldattr );
     return ch;
 }
+
+/* Signal Handler for SIGINT */
+void sigintHandler(int sig_num)
+{
+	/* Reset handler to catch SIGINT next time.
+	 * Refer http://en.cppreference.com/w/c/program/signal
+	 */
+	signal(SIGINT, sigintHandler);
+	debug_print(EXCESS, "Cannot be terminated using Ctrl+C\n");
+	fflush(stdout);
+}
+/* Refer http://en.cppreference.com/w/c/program/signal */

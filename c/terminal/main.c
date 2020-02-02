@@ -3,9 +3,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+struct command {
+	char cmd[1024];
+	struct node *next;
+	struct node *prev;
+};
+
 int main(void)
 {
 	char ch[100];
+
+	signal(SIGINT, sigintHandler);
 
 	if (getch() == '\033') { // if the first value is esc
 		getch(); // skip the [
